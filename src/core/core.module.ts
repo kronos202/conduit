@@ -8,21 +8,22 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { database, environment, port } from '../config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TransformResponseInterceptor } from './interceptors/transform-response/transform-response.interceptor';
 import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
 import { LoggerMiddleware } from './loggers/logger.middleware';
-
+import appConfig from '../config/app.config';
+import AppDataSource from 'src/database/dataSource';
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, environment, port],
+      load: [appConfig],
       isGlobal: true,
     }),
     PrismaModule.forRoot({
       isGlobal: true,
+      prismaServiceOptions: AppDataSource,
     }),
   ],
   providers: [

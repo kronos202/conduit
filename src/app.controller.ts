@@ -28,7 +28,7 @@ export class AppController {
   ): Promise<void> {
     try {
       await this.upload.deleteImage(publicId);
-      res.status(200).json({ message: 'Image deleted successfully' });
+      res.status(200).json({ message: 'Image deleted successfully!' });
     } catch (error) {
       res
         .status(500)

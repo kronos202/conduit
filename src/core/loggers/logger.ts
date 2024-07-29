@@ -8,19 +8,19 @@ const logFormat = winston.format.printf(({ level, message, timestamp }) => {
   const requestId = v4();
   switch (level) {
     case 'error':
-      coloredLevel = chalk.red(level.toUpperCase());
+      coloredLevel = chalk.redBright(level.toUpperCase());
       break;
     case 'warn':
-      coloredLevel = chalk.yellow(level.toUpperCase());
+      coloredLevel = chalk.yellowBright(level.toUpperCase());
       break;
     case 'info':
-      coloredLevel = chalk.blue(level.toUpperCase());
+      coloredLevel = chalk.greenBright(level.toUpperCase());
       break;
     case 'debug':
-      coloredLevel = chalk.magenta(level.toUpperCase());
+      coloredLevel = chalk.cyanBright(level.toUpperCase());
       break;
     default:
-      coloredLevel = chalk.green(level.toUpperCase());
+      coloredLevel = chalk.cyanBright(level.toUpperCase());
   }
   return `${chalk.gray(timestamp)} ${coloredLevel}: ${requestId} ${message}`;
 });
@@ -28,7 +28,8 @@ const logFormat = winston.format.printf(({ level, message, timestamp }) => {
 const transports = [
   new winston.transports.Console(),
   new winston.transports.DailyRotateFile({
-    filename: 'logs/application-%DATE%.info.log',
+    filename: 'application-%DATE%.info.log',
+    dirname: 'logs',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '20m',
@@ -36,7 +37,8 @@ const transports = [
     level: 'info',
   }),
   new winston.transports.DailyRotateFile({
-    filename: 'logs/application-%DATE%.error.log',
+    filename: 'application-%DATE%.error.log',
+    dirname: 'logs',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '20m',
@@ -53,6 +55,7 @@ const logger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.splat(),
     winston.format.json(),
+    winston.format.ms(),
     logFormat,
   ),
   transports,
