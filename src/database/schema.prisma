@@ -23,37 +23,33 @@ model User {
 
   followers        Follower[]        @relation("UserFollowers")
   following        Follower[]        @relation("UserFollowing")
-  Article          Article[]
+  Article          Article[] 
   Comment          Comment[]
-  favoriteArticles FavoriteArticle[]
+  
   role Role[]
   session Session[]
+
+  favoriteArticles Article[] @relation("UserFavorites")
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model FavoriteArticle {
-  userId    Int
-  articleId Int
-  user      User    @relation(fields: [userId], references: [id])
-  article   Article @relation(fields: [articleId], references: [id])
-
-  @@id([userId, articleId])
-}
 
 model Article {
   id          Int    @id @default(autoincrement())
   title       String
   description String
   content     String
-
+  
+  favoritesCount Int    @default(0)
+  slug          String  @unique
   comments Comment[]
   tags     Tag[]
-  FavoriteArticle FavoriteArticle[]
   authorId Int
   author   User      @relation(fields: [authorId], references: [id])
-
+  favoritedBy       User[]           @relation(name: "UserFavorites")
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt

@@ -11,6 +11,9 @@ import { UserModule } from './domain/user/user.module';
 import { RoleModule } from './domain/roles/roles.module';
 import { SessionModule } from './domain/session/session.module';
 import { ArticleModule } from './domain/article/article.module';
+import { TagModule } from './domain/tag/tag.module';
+import { CommentModule } from './domain/comment/comment.module';
+import { FollowerModule } from './domain/follower/follower.module';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { ArticleModule } from './domain/article/article.module';
     RoleModule,
     SessionModule,
     ArticleModule,
+    TagModule,
+    CommentModule,
+    FollowerModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, Logger, UserService],

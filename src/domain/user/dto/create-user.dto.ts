@@ -22,7 +22,7 @@ export class CreateUserDto {
   @MinLength(8)
   @IsString()
   @IsNotEmpty()
-  @Exclude({ toPlainOnly: true })
+  @Exclude()
   password: string;
 
   @IsNotEmpty()

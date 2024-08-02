@@ -26,7 +26,6 @@ async function bootstrap() {
     exclude: ['/'],
   });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
-
   app.use(helmet());
 
   console.table({

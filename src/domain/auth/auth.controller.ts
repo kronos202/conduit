@@ -16,6 +16,9 @@ import { NullableType } from 'src/utils/types/nullable';
 import { User } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import { Roles } from '../roles/roles.decorator';
+import { RoleEnum } from '../roles/roles.enum';
+import { RolesGuard } from 'src/core/guard/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -38,7 +41,8 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(RoleEnum.user)
   public me(@Request() request): Promise<NullableType<User>> {
     console.log(request.user);
 

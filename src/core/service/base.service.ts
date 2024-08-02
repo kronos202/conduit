@@ -24,10 +24,9 @@ export class BaseService<
     return this.databaseService[this.modelName].create({ data });
   }
 
-  findById(id: number, include?: IncludeInput) {
-    return this.databaseService[this.modelName].findUnique({
+  async findById(id: number) {
+    return await this.databaseService[this.modelName].findUnique({
       where: { id },
-      include,
     });
   }
   async findOrFailById(id: number) {
@@ -55,10 +54,11 @@ export class BaseService<
     where?: WhereInput;
     select?: SelectInput;
     orderBy?: OrderBy<SelectInput>;
+    include?: IncludeInput;
     page?: number;
     limit?: number;
   }) {
-    const { where, select, orderBy, page = 1, limit = 10 } = params;
+    const { where, select, orderBy, page = 1, limit = 10, include } = params;
 
     const skip = (page - 1) * limit;
     const take = limit;
@@ -74,6 +74,7 @@ export class BaseService<
       select,
       skip,
       take,
+      include,
     });
 
     const hasNextPage = skip + limit < totalItems;

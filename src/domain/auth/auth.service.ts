@@ -66,7 +66,7 @@ export class AuthService {
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: user.id,
-      role: role.role.map((name) => name).toString(),
+      role: role.role.map((name) => name.id).toString(),
       sessionId: session.id,
       hash,
     });
@@ -109,7 +109,7 @@ export class AuthService {
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: session.userId,
-      role: roles.role.map((name) => name).toString(),
+      role: roles.role.map((name) => name.id).toString(),
       sessionId: session.id,
       hash,
     });
