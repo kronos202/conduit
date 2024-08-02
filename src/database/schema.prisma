@@ -11,11 +11,97 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  
 }
 
 model User {
+  id       Int     @id @default(autoincrement()) 
+  email    String  @unique
+  username String
+  password String
+  bio      String?
+
+  followers        Follower[]        @relation("UserFollowers")
+  following        Follower[]        @relation("UserFollowing")
+  Article          Article[]
+  Comment          Comment[]
+  favoriteArticles FavoriteArticle[]
+  role Role[]
+  session Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FavoriteArticle {
+  userId    Int
+  articleId Int
+  user      User    @relation(fields: [userId], references: [id])
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@id([userId, articleId])
+}
+
+model Article {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  content     String
+
+  comments Comment[]
+  tags     Tag[]
+  FavoriteArticle FavoriteArticle[]
+  authorId Int
+  author   User      @relation(fields: [authorId], references: [id])
+
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Comment {
+  id        Int    @id @default(autoincrement())
+  content   String
+  authorId  Int
+  articleId Int
+
+  author  User    @relation(fields: [authorId], references: [id])
+  article Article @relation(fields: [articleId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Follower {
+  id          Int  @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  follower    User @relation("UserFollowers", fields: [followerId], references: [id])
+  following   User @relation("UserFollowing", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
+model Tag {
   id        Int       @id @default(autoincrement())
-  email     String    @unique
+  name      String    @unique
+  articles  Article[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+}
+
+model Session {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  hash      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? 
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  users User[]
 }

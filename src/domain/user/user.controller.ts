@@ -5,22 +5,24 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
 
-@Controller('user')
+@Controller('users')
+@UseInterceptors(SerializeInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  @Post('/register')
   create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+    return this.userService.createWithHash(createUserDto);
   }
 
-  @Get()
+  @Get('getAll')
   findAll() {
     return this.userService.findAll();
   }
@@ -33,10 +35,5 @@ export class UserController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
   }
 }

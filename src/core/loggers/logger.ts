@@ -1,6 +1,6 @@
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { v4 } from 'uuid';
 
 const logFormat = winston.format.printf(({ level, message, timestamp }) => {

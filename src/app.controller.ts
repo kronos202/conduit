@@ -36,7 +36,7 @@ export class AppController {
     }
   }
 
-  @Get('test/get')
+  @Get('test')
   getHello(): string {
     return this.appService.getHello();
   }

@@ -5,38 +5,31 @@ import {
   Module,
   NestModule,
   RequestMethod,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponseInterceptor } from './interceptors/transform-response/transform-response.interceptor';
 import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
 import { LoggerMiddleware } from './loggers/logger.middleware';
 import appConfig from '../config/app.config';
-import AppDataSource from 'src/database/dataSource';
+import authConfig from 'src/domain/auth/config/auth.config';
+
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig],
       isGlobal: true,
+      load: [authConfig, appConfig],
+      envFilePath: ['.env'],
     }),
     PrismaModule.forRoot({
       isGlobal: true,
-      prismaServiceOptions: AppDataSource,
     }),
   ],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformResponseInterceptor,
-    },
-    {
-      provide: APP_PIPE,
-      useValue: new ValidationPipe({
-        transform: true,
-        whitelist: true,
-      }),
     },
     {
       provide: APP_FILTER,

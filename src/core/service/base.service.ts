@@ -1,11 +1,19 @@
 import { NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
-import { IPaginationOptions } from 'src/utils/types/IPaginationOptions';
 
-export class BaseService<CreateDto, UpdateDto> {
+type OrderBy<T> = { [P in keyof T]?: 'asc' | 'desc' };
+
+export class BaseService<
+  CreateDto,
+  UpdateDto,
+  WhereInput = any,
+  SelectInput = any,
+  IncludeInput = any,
+> {
   constructor(
     protected databaseService: PrismaService,
-    protected readonly modelName: string,
+    protected modelName: Prisma.ModelName,
   ) {}
 
   findMany() {
@@ -16,8 +24,11 @@ export class BaseService<CreateDto, UpdateDto> {
     return this.databaseService[this.modelName].create({ data });
   }
 
-  findById(id: number) {
-    return this.databaseService[this.modelName].findUnique({ where: { id } });
+  findById(id: number, include?: IncludeInput) {
+    return this.databaseService[this.modelName].findUnique({
+      where: { id },
+      include,
+    });
   }
   async findOrFailById(id: number) {
     const result = await this.findById(id);
@@ -40,47 +51,39 @@ export class BaseService<CreateDto, UpdateDto> {
     return this.databaseService[this.modelName].delete({ where: { id } });
   }
 
-  async findWithPagination(iPaginationOptions: IPaginationOptions) {
-    const { page, limit, search, sortField, sortOrder } = iPaginationOptions;
+  async findWithPagination(params: {
+    where?: WhereInput;
+    select?: SelectInput;
+    orderBy?: OrderBy<SelectInput>;
+    page?: number;
+    limit?: number;
+  }) {
+    const { where, select, orderBy, page = 1, limit = 10 } = params;
+
     const skip = (page - 1) * limit;
+    const take = limit;
 
-    const where = search
-      ? {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { content: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-      : {};
+    const totalItems = await this.databaseService[this.modelName].count({
+      where,
+    });
+    const totalPages = Math.ceil(totalItems / limit);
 
-    const orderBy = sortField
-      ? { [sortField]: sortOrder || 'asc' }
-      : { createdAt: 'desc' };
+    const items = await this.databaseService[this.modelName].findMany({
+      where,
+      orderBy,
+      select,
+      skip,
+      take,
+    });
 
-    const [data, total] = await Promise.all([
-      this.databaseService[this.modelName].findMany({
-        skip,
-        take: limit,
-        where,
-        orderBy,
-      }),
-      this.databaseService[this.modelName].count({ where }),
-    ]);
-
-    const hasNextPage = skip + limit < total;
+    const hasNextPage = skip + limit < totalItems;
 
     return {
-      data,
-      total,
-      page,
-      lastPage: Math.ceil(total / limit),
+      items,
+      totalItems,
+      totalPages,
+      currentPage: page,
       hasNextPage,
     };
   }
-  // TODO
-  // findById => result, null
-  // findOrFailById => result, 404
-  // updateOrFailById => 404
-  // deleteOrFailById => 404
-  // findWithPagination
 }

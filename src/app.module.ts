@@ -8,9 +8,21 @@ import { AuthModule } from './domain/auth/auth.module';
 import { UserController } from './domain/user/user.controller';
 import { UserService } from './domain/user/user.service';
 import { UserModule } from './domain/user/user.module';
+import { RoleModule } from './domain/roles/roles.module';
+import { SessionModule } from './domain/session/session.module';
+import { ArticleModule } from './domain/article/article.module';
 
 @Module({
-  imports: [UploadModule, CoreModule, HealthModule, AuthModule, UserModule],
+  imports: [
+    UploadModule,
+    CoreModule,
+    HealthModule,
+    AuthModule,
+    UserModule,
+    RoleModule,
+    SessionModule,
+    ArticleModule,
+  ],
   controllers: [AppController, UserController],
   providers: [AppService, Logger, UserService],
 })

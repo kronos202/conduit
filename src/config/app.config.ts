@@ -69,12 +69,12 @@ export default registerAs<AppConfig>('app', () => {
   return {
     nodeEnv: process.env.NODE_ENV || 'development',
     app_name: process.env.APP_NAME || 'app',
-    api_Prefix: 'api',
+    api_Prefix: process.env.API_PREFIX,
     app_port: process.env.APP_PORT ? parseInt(process.env.APP_PORT, 10) : 3000,
     database_port: +process.env.DATABASE_PORT || 5432,
-    database_username: process.env.DATABASE_USERNAME || 'test_username',
-    database_password: process.env.DATABASE_PASSWORD || 'test_password',
-    database_name: process.env.DATABASE_NAME || 'test',
-    database_host: process.env.DATABASE_HOST || 'localhost',
+    database_username: process.env.DATABASE_USERNAME,
+    database_password: process.env.DATABASE_PASSWORD,
+    database_name: process.env.DATABASE_NAME,
+    database_host: process.env.DATABASE_HOST,
   };
 });
