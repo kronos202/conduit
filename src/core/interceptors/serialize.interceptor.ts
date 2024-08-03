@@ -4,35 +4,41 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
-import { Observable, of, switchMap } from 'rxjs';
-import * as _ from 'lodash';
-import { User } from '@prisma/client';
+import { Observable, map } from 'rxjs';
+import _ from 'lodash';
 
 @Injectable()
 export class SerializeInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler<any>,
+  ): Observable<any> {
     return next.handle().pipe(
-      switchMap((response) => {
-        if (!response) return of(response);
-
-        return of(this.formatResponse(response));
+      map((data) => {
+        // Giả định rằng status và message là cố định, bạn có thể điều chỉnh theo yêu cầu của bạn
+        return {
+          status: 200,
+          message: 'Success',
+          data: this.removePassword(data),
+        };
       }),
     );
   }
 
-  formatResponse(response: any) {
-    if (response instanceof Object) {
-      delete response.password;
-
-      return {
-        status: 200,
-        message: 'Success',
-        data: _.isArray(response.items)
-          ? response.items.map((user: User) => _.omit(user, ['password']))
-          : _.omit(response, 'password'),
-      };
+  private removePassword(data: any): any {
+    if (_.isArray(data)) {
+      return data.map((item) => this.removePassword(item));
     }
-
-    return response;
+    if (_.isObject(data)) {
+      const sanitizedData = _.cloneDeep(data);
+      _.unset(sanitizedData, 'password');
+      _.forEach(sanitizedData, (value, key) => {
+        if (_.isObject(value)) {
+          sanitizedData[key] = this.removePassword(value);
+        }
+      });
+      return sanitizedData;
+    }
+    return data;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { BaseService } from 'src/core/service/base.service';
@@ -74,10 +74,14 @@ export class ArticleService extends BaseService<
     return await this.findOrFailById(id);
   }
 
-  async findByTag(tagName: string) {
+  async findByTag(tagNames: string[]) {
     const where: Prisma.ArticleWhereInput = {
       tags: {
-        some: { name: tagName },
+        some: {
+          name: {
+            in: tagNames,
+          },
+        },
       },
     };
     const include: Prisma.ArticleInclude = {
@@ -92,9 +96,12 @@ export class ArticleService extends BaseService<
   }
 
   async update(
-    id: number,
+    articleId: number,
     data: Prisma.ArticleUpdateInput & { tags: string[] },
+    userId: number,
   ) {
+    await this.checkAuthorization(articleId, userId);
+
     const { tags, content, description, title } = data;
     let slug: string;
     if (title) {
@@ -112,7 +119,7 @@ export class ArticleService extends BaseService<
     }
 
     return this.databaseService.article.update({
-      where: { id },
+      where: { id: articleId },
       data: {
         title,
         description,
@@ -127,44 +134,34 @@ export class ArticleService extends BaseService<
     });
   }
 
-  async remove(id: number) {
-    return await this.deleteOrFailById(id);
+  async remove(articleId: number, userId: number) {
+    await this.checkAuthorization(articleId, userId);
+
+    return await this.deleteOrFailById(articleId);
   }
 
-  async addFavorite(articleId: number, userId: number): Promise<Article> {
-    const article = await this.databaseService.article.update({
+  async toggleFavorite(articleId: number, userId: number): Promise<Article> {
+    const article = await this.databaseService.article.findUnique({
+      where: { id: articleId },
+      include: { favoritedBy: true },
+    });
+
+    const isFavorited = article.favoritedBy.some((user) => user.id === userId);
+
+    return this.databaseService.article.update({
       where: { id: articleId },
       data: {
-        favoritedBy: {
-          connect: { id: userId },
-        },
+        favoritedBy: isFavorited
+          ? { disconnect: { id: userId } }
+          : { connect: { id: userId } },
         favoritesCount: {
-          increment: 1,
+          [isFavorited ? 'decrement' : 'increment']: 1,
         },
       },
       include: {
         favoritedBy: true,
       },
     });
-    return article;
-  }
-
-  async removeFavorite(articleId: number, userId: number): Promise<Article> {
-    const article = await this.databaseService.article.update({
-      where: { id: articleId },
-      data: {
-        favoritedBy: {
-          disconnect: { id: userId },
-        },
-        favoritesCount: {
-          decrement: 1,
-        },
-      },
-      include: {
-        favoritedBy: true,
-      },
-    });
-    return article;
   }
 
   private async generateUniqueSlug(
@@ -181,5 +178,19 @@ export class ArticleService extends BaseService<
     }
 
     return newSlug;
+  }
+
+  private async checkAuthorization(articleId: number, userId: number) {
+    const article = await this.databaseService.article.findUnique({
+      where: { id: articleId },
+    });
+
+    if (article.authorId !== userId) {
+      throw new ForbiddenException(
+        'You are not authorized to update this article',
+      );
+    }
+
+    return article;
   }
 }

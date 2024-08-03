@@ -1,6 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateFollowerDto } from './dto/create-follower.dto';
-import { UpdateFollowerDto } from './dto/update-follower.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 

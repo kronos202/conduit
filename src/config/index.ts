@@ -1,5 +1,5 @@
-import { AuthConfig } from 'src/domain/auth/config/auth-config.types';
-import { AppConfig } from './app-config.type';
+import { AuthConfig } from 'src/config/auth/auth-config.types';
+import { AppConfig } from './app/app-config.type';
 
 type AllConfigType = {
   auth: AuthConfig;
