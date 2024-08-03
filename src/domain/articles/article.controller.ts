@@ -10,13 +10,17 @@ import {
   Res,
   HttpStatus,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
 import { Public } from 'src/core/decorator/public.decorator';
+import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
+import { ArticleExitPipe } from 'src/core/pipe/article/articleExist.pipe';
 
 @Controller('article')
+@UseInterceptors(SerializeInterceptor)
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
@@ -41,7 +45,7 @@ export class ArticleController {
   }
 
   @Post('toggleFavorite/:id')
-  toggleFavorite(@Request() req, @Param('id') id: string) {
+  toggleFavorite(@Request() req, @Param('id', ArticleExitPipe) id: string) {
     return this.articleService.toggleFavorite(+id, req.user.id);
   }
 
@@ -52,7 +56,7 @@ export class ArticleController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', ArticleExitPipe) id: string,
     @Body() data: Prisma.ArticleUpdateInput & { tags: string[] },
     @Request() req,
   ) {
@@ -60,7 +64,11 @@ export class ArticleController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Res() res: Response, @Request() req) {
+  async remove(
+    @Param('id', ArticleExitPipe) id: string,
+    @Res() res: Response,
+    @Request() req,
+  ) {
     await this.articleService.remove(+id, req.user.id);
     return res.status(HttpStatus.OK).json({ message: 'delete sucess' });
   }

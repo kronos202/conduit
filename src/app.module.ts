@@ -15,8 +15,8 @@ import { FollowerModule } from './domain/followers/follower.module';
 
 @Module({
   imports: [
-    UploadModule,
     CoreModule,
+    UploadModule,
     HealthModule,
     AuthModule,
     UserModule,

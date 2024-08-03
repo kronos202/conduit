@@ -4,12 +4,9 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import ms from 'ms';
-import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';

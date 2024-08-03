@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { BaseService } from 'src/core/service/base.service';
@@ -104,19 +100,7 @@ export class ArticleService extends BaseService<
     data: Prisma.ArticleUpdateInput & { tags: string[] },
     userId: number,
   ) {
-    const article = await this.databaseService.article.findUnique({
-      where: { id: articleId },
-    });
-
-    if (!article) {
-      throw new NotFoundException('Article not found');
-    }
-
-    if (article.authorId !== userId) {
-      throw new ForbiddenException(
-        'You are not authorized to update this article',
-      );
-    }
+    await this.checkAuthorization(articleId, userId);
 
     const { tags, content, description, title } = data;
     let slug: string;
@@ -151,19 +135,7 @@ export class ArticleService extends BaseService<
   }
 
   async remove(articleId: number, userId: number) {
-    const article = await this.databaseService.article.findUnique({
-      where: { id: articleId },
-    });
-
-    if (!article) {
-      throw new NotFoundException('Article not found');
-    }
-
-    if (article.authorId !== userId) {
-      throw new ForbiddenException(
-        'You are not authorized to update this article',
-      );
-    }
+    await this.checkAuthorization(articleId, userId);
 
     return await this.deleteOrFailById(articleId);
   }
@@ -173,10 +145,6 @@ export class ArticleService extends BaseService<
       where: { id: articleId },
       include: { favoritedBy: true },
     });
-
-    if (!article) {
-      throw new Error('Article not found');
-    }
 
     const isFavorited = article.favoritedBy.some((user) => user.id === userId);
 
@@ -210,5 +178,19 @@ export class ArticleService extends BaseService<
     }
 
     return newSlug;
+  }
+
+  private async checkAuthorization(articleId: number, userId: number) {
+    const article = await this.databaseService.article.findUnique({
+      where: { id: articleId },
+    });
+
+    if (article.authorId !== userId) {
+      throw new ForbiddenException(
+        'You are not authorized to update this article',
+      );
+    }
+
+    return article;
   }
 }

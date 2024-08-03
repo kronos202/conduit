@@ -27,8 +27,8 @@ import { BcryptService } from 'src/core/service/bcrypt.service';
     RolesService,
     SessionService,
     JwtStrategy,
-    JwtRefreshStrategy,
     BcryptService,
+    JwtRefreshStrategy,
   ],
   controllers: [AuthController],
 })
