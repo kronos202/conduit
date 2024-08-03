@@ -13,8 +13,8 @@ import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
-import { UserService } from '../user/user.service';
-import { SessionService } from '../session/session.service';
+import { UserService } from '../users/user.service';
+import { SessionService } from '../sessions/session.service';
 import { Role, Session, User } from '@prisma/client';
 import { RolesService } from '../roles/roles.service';
 import AllConfigType from 'src/config';

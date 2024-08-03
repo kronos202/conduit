@@ -5,15 +5,15 @@ import { UploadModule } from './upload/upload.module';
 import { CoreModule } from './core/core.module';
 import { HealthModule } from './domain/health/health.module';
 import { AuthModule } from './domain/auth/auth.module';
-import { UserController } from './domain/user/user.controller';
-import { UserService } from './domain/user/user.service';
-import { UserModule } from './domain/user/user.module';
+import { UserController } from './domain/users/user.controller';
+import { UserService } from './domain/users/user.service';
+import { UserModule } from './domain/users/user.module';
 import { RoleModule } from './domain/roles/roles.module';
-import { SessionModule } from './domain/session/session.module';
-import { ArticleModule } from './domain/article/article.module';
-import { TagModule } from './domain/tag/tag.module';
-import { CommentModule } from './domain/comment/comment.module';
-import { FollowerModule } from './domain/follower/follower.module';
+import { SessionModule } from './domain/sessions/session.module';
+import { ArticleModule } from './domain/articles/article.module';
+import { TagModule } from './domain/tags/tag.module';
+import { CommentModule } from './domain/comments/comment.module';
+import { FollowerModule } from './domain/followers/follower.module';
 
 @Module({
   imports: [

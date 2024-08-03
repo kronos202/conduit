@@ -7,6 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { IsEmailUnique } from 'src/core/decorator/IsEmailUnique.decorator';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
 export class CreateUserDto {
@@ -16,6 +17,7 @@ export class CreateUserDto {
   @MaxLength(255)
   @IsString()
   @MinLength(8)
+  @IsEmailUnique({ message: 'Email already exists' })
   email: string;
 
   @MaxLength(20)
