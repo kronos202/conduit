@@ -11,6 +11,7 @@ import { SessionModule } from '../sessions/session.module';
 import { SessionService } from '../sessions/session.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
+import { BcryptService } from 'src/core/service/bcrypt.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
     SessionService,
     JwtStrategy,
     JwtRefreshStrategy,
+    BcryptService,
   ],
   controllers: [AuthController],
 })

@@ -3,11 +3,12 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { RolesService } from '../roles/roles.service';
 import { RoleModule } from '../roles/roles.module';
+import { BcryptService } from 'src/core/service/bcrypt.service';
 
 @Module({
   imports: [RoleModule],
   controllers: [UserController],
-  providers: [UserService, RolesService],
+  providers: [UserService, RolesService, BcryptService],
   exports: [UserService],
 })
 export class UserModule {}

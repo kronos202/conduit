@@ -23,6 +23,7 @@ import { JwtRefreshPayloadType } from './strategy/types/jwt-refresh-payload.type
 import { LoginResponseDto } from './dto/login-response.dto';
 import { JwtPayloadType } from './strategy/types/jwt-payload.type';
 import { NullableType } from 'src/utils/types/nullable';
+import { BcryptService } from 'src/core/service/bcrypt.service';
 
 @Injectable()
 export class AuthService {
@@ -33,12 +34,13 @@ export class AuthService {
     private roleService: RolesService,
     private configService: ConfigService<AllConfigType>,
     protected databaseService: PrismaService,
+    private bcryptService: BcryptService,
   ) {}
 
   async signIn(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
     const user = await this.userService.findOneOrFailByEmail(loginDto.email);
 
-    const isValidPassword = await bcrypt.compare(
+    const isValidPassword = await this.bcryptService.compare(
       loginDto.password,
       user.password,
     );
@@ -54,10 +56,7 @@ export class AuthService {
 
     const role = await this.roleService.getUserRoles(user.id);
 
-    const hash = crypto
-      .createHash('sha256')
-      .update(randomStringGenerator())
-      .digest('hex');
+    const hash = await this.bcryptService.genSha256();
 
     const session = await this.sessionService.create({
       userId: user.id,
@@ -92,10 +91,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const hash = crypto
-      .createHash('sha256')
-      .update(randomStringGenerator())
-      .digest('hex');
+    const hash = await this.bcryptService.genSha256();
 
     const roles = await this.roleService.getUserRoles(session.userId);
 

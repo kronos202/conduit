@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Request,
   ParseIntPipe,
   Res,
@@ -15,15 +14,14 @@ import {
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import { Public } from 'src/core/decorator/public.decorator';
 
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post('create/:articleId')
-  @UseGuards(AuthGuard('jwt'))
   async create(
     @Body() content: CreateCommentDto,
     @Request() req,
@@ -37,17 +35,18 @@ export class CommentController {
   }
 
   @Get('byArticle/:id')
+  @Public()
   async findAll(@Param('id', ParseIntPipe) articleId: number) {
     return await this.commentService.getCommentsByArticleId(articleId);
   }
 
   @Get(':id')
+  @Public()
   async findOne(@Param('id', ParseIntPipe) commentId: number) {
     return await this.commentService.getCommentById(commentId);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard('jwt'))
   async update(
     @Param('id') id: string,
     @Body() data: UpdateCommentDto,
@@ -61,7 +60,6 @@ export class CommentController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
   async remove(@Param('id') id: string, @Request() req, @Res() res: Response) {
     await this.commentService.deleteComment(+id, req.user.id);
     return res.status(HttpStatus.OK).json({ message: 'delete succesfully!' });

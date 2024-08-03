@@ -5,8 +5,6 @@ import { UploadModule } from './upload/upload.module';
 import { CoreModule } from './core/core.module';
 import { HealthModule } from './domain/health/health.module';
 import { AuthModule } from './domain/auth/auth.module';
-import { UserController } from './domain/users/user.controller';
-import { UserService } from './domain/users/user.service';
 import { UserModule } from './domain/users/user.module';
 import { RoleModule } from './domain/roles/roles.module';
 import { SessionModule } from './domain/sessions/session.module';
@@ -29,7 +27,7 @@ import { FollowerModule } from './domain/followers/follower.module';
     CommentModule,
     FollowerModule,
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, Logger, UserService],
+  controllers: [AppController],
+  providers: [AppService, Logger],
 })
 export class AppModule {}

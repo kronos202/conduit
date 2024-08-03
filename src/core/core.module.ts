@@ -7,12 +7,13 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponseInterceptor } from './interceptors/transform-response/transform-response.interceptor';
 import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
 import { LoggerMiddleware } from './loggers/logger.middleware';
-import appConfig from '../config/app.config';
-import authConfig from 'src/domain/auth/config/auth.config';
+import appConfig from '../config/app/app.config';
+import authConfig from 'src/config/auth/auth.config';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Global()
 @Module({
@@ -34,6 +35,10 @@ import authConfig from 'src/domain/auth/config/auth.config';
     {
       provide: APP_FILTER,
       useValue: new PrismaClientExceptionFilter(),
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
     Logger,
   ],

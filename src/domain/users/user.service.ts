@@ -3,10 +3,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BaseService } from 'src/core/service/base.service';
 import { PrismaService } from 'nestjs-prisma';
-import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
 import { RoleEnum } from '../roles/roles.enum';
 import { RolesService } from '../roles/roles.service';
+import { BcryptService } from 'src/core/service/bcrypt.service';
 
 @Injectable()
 export class UserService extends BaseService<
@@ -23,14 +23,15 @@ export class UserService extends BaseService<
   ];
 
   constructor(
-    databaseService: PrismaService,
+    protected databaseService: PrismaService,
     private rolesService: RolesService,
+    private bcryptService: BcryptService,
   ) {
     super(databaseService, 'User');
   }
 
   async createWithHash(data: Prisma.UserCreateInput) {
-    const hashedPassword = await this.hashPassword(data.password);
+    const hashedPassword = await this.bcryptService.hash(data.password);
 
     const userData = {
       email: data.email,
@@ -71,15 +72,5 @@ export class UserService extends BaseService<
     }
 
     return user;
-  }
-
-  async hashPassword(password: string) {
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
-    return hashedPassword;
-  }
-
-  comparePassword(password: string, hashedPassword: string) {
-    return bcrypt.compare(password, hashedPassword);
   }
 }

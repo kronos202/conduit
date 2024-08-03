@@ -7,25 +7,20 @@ import {
   Param,
   Delete,
   Request,
-  UseGuards,
   Res,
   HttpStatus,
   Query,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Prisma } from '@prisma/client';
-import { Roles } from '../roles/roles.decorator';
-import { RoleEnum } from '../roles/roles.enum';
-import { RolesGuard } from 'src/core/guard/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import { Public } from 'src/core/decorator/public.decorator';
 
 @Controller('article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Post('create')
-  @UseGuards(AuthGuard('jwt'))
   create(
     @Body() createArticleDto: Prisma.ArticleCreateInput & { tags: string[] },
     @Request() req,
@@ -34,56 +29,44 @@ export class ArticleController {
   }
 
   @Get('byTag')
-  async findByTag(@Query('tag') tag: string) {
+  @Public()
+  async findByTag(@Query('tag') tag: string[]) {
     return await this.articleService.findByTag(tag);
   }
 
   @Get('all')
+  @Public()
   findAll() {
     return this.articleService.findAll();
   }
 
-  @Post('favorite/:id')
-  // @UseGuards(AuthGuard('jwt'))
-  addFavorite(@Request() req, @Param('id') id: string) {
-    return this.articleService.addFavorite(+id, 18);
-  }
-
-  @Delete('favorite/:id')
-  // @UseGuards(AuthGuard('jwt'))
-  removeFavorite(@Request() req, @Param('id') id: string) {
-    return this.articleService.removeFavorite(+id, 18);
+  @Post('toggleFavorite/:id')
+  toggleFavorite(@Request() req, @Param('id') id: string) {
+    return this.articleService.toggleFavorite(+id, req.user.id);
   }
 
   @Get('favorite')
-  @UseGuards(AuthGuard('jwt'))
   findAllFavorite(@Request() req) {
     return this.articleService.findAllFavorite(req.user.id);
-  }
-
-  @Get('test')
-  @Roles(RoleEnum.user)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  test(@Request() req) {
-    console.log(req.user);
-    return 'asd';
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() data: Prisma.ArticleUpdateInput & { tags: string[] },
+    @Request() req,
   ) {
-    return this.articleService.update(+id, data);
+    return this.articleService.update(+id, data, req.user.id);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Res() res: Response) {
-    await this.articleService.remove(+id);
+  async remove(@Param('id') id: string, @Res() res: Response, @Request() req) {
+    await this.articleService.remove(+id, req.user.id);
     return res.status(HttpStatus.OK).json({ message: 'delete sucess' });
   }
 
   @Get(':id')
+  @Public()
   async findOne(@Param('id') id: string) {
     return await this.articleService.findOrFailById(+id);
   }
