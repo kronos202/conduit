@@ -48,7 +48,7 @@ model Article {
   comments Comment[]
   tags     Tag[]
   authorId Int
-  author   User      @relation(fields: [authorId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id],onDelete: Cascade)
   favoritedBy       User[]           @relation(name: "UserFavorites")
 
   createdAt       DateTime          @default(now())
@@ -61,8 +61,8 @@ model Comment {
   authorId  Int
   articleId Int
 
-  author  User    @relation(fields: [authorId], references: [id])
-  article Article @relation(fields: [articleId], references: [id])
+  author  User    @relation(fields: [authorId], references: [id],onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id],onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -72,8 +72,8 @@ model Follower {
   id          Int  @id @default(autoincrement())
   followerId  Int
   followingId Int
-  follower    User @relation("UserFollowers", fields: [followerId], references: [id])
-  following   User @relation("UserFollowing", fields: [followingId], references: [id])
+  follower    User @relation("UserFollowers", fields: [followerId], references: [id],onDelete: Cascade)
+  following   User @relation("UserFollowing", fields: [followingId], references: [id],onDelete: Cascade)
 
   @@unique([followerId, followingId])
 }
@@ -89,7 +89,7 @@ model Tag {
 model Session {
   id        Int       @id @default(autoincrement())
   userId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id],onDelete: Cascade)
   hash      String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -99,5 +99,7 @@ model Session {
 model Role {
   id   Int    @id @default(autoincrement())
   name String @unique
-  users User[]
+  
+
+  users User[] 
 }

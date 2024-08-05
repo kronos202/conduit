@@ -36,6 +36,10 @@ class EnvironmentVariablesValidator {
   @IsOptional()
   APP_NAME: string;
 
+  @IsString()
+  @IsOptional()
+  FRONTEND_URL: string;
+
   @ValidateIf((envValues) => envValues.DATABASE_URL)
   @IsString()
   DATABASE_URL: string;
@@ -69,6 +73,7 @@ export default registerAs<AppConfig>('app', () => {
   return {
     nodeEnv: process.env.NODE_ENV || 'development',
     app_name: process.env.APP_NAME || 'app',
+    fe_url: process.env.FRONTEND_URL || 'app',
     api_Prefix: process.env.API_PREFIX,
     app_port: process.env.APP_PORT ? parseInt(process.env.APP_PORT, 10) : 3000,
     database_port: +process.env.DATABASE_PORT || 5432,

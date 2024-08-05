@@ -5,7 +5,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  MaxLength,
   MinLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -15,18 +14,17 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @Transform(lowerCaseTransformer)
   @IsNotEmpty()
   @IsEmail()
-  @MaxLength(255)
-  @IsString()
   @MinLength(8)
+  @IsString()
   email: string;
 
-  @MaxLength(20)
   @MinLength(8)
   @IsString()
   @IsNotEmpty()
   password?: string;
 
   @IsNotEmpty()
+  @MinLength(8)
   username?: string;
 
   @IsOptional()

@@ -1,10 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BaseService } from 'src/core/service/base.service';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma } from '@prisma/client';
-import { RoleEnum } from '../roles/roles.enum';
 import { RolesService } from '../roles/roles.service';
 import { BcryptService } from 'src/core/service/bcrypt.service';
 
@@ -41,7 +40,7 @@ export class UserService extends BaseService<
 
     const user = await this.create(userData);
 
-    await this.rolesService.assignRoleToUser(user.id, RoleEnum.user);
+    await this.rolesService.assignRoleToUser(user.id, 'user');
 
     return user;
   }
@@ -62,15 +61,9 @@ export class UserService extends BaseService<
     return await this.updateOrFailById(id, updateUserDto);
   }
 
-  async findOneOrFailByEmail(email: string) {
-    const user = await this.databaseService.user.findUnique({
-      where: { email },
+  async findOneOrFailByEmail(emailS: string) {
+    return await this.databaseService.user.findUnique({
+      where: { email: emailS },
     });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
   }
 }

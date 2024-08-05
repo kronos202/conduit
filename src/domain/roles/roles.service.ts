@@ -6,7 +6,7 @@ import { RoleEnum } from './roles.enum';
 export class RolesService {
   constructor(private prisma: PrismaService) {}
 
-  async createRole(name: RoleEnum) {
+  async createRole(name: keyof typeof RoleEnum) {
     return this.prisma.role.create({
       data: {
         name,
@@ -14,7 +14,7 @@ export class RolesService {
     });
   }
 
-  async assignRoleToUser(userId: number, roleName: RoleEnum) {
+  async assignRoleToUser(userId: number, roleName: keyof typeof RoleEnum) {
     const role = await this.prisma.role.findUnique({
       where: { name: roleName },
     });

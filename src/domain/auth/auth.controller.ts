@@ -7,6 +7,7 @@ import {
   Request,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthService } from './auth.service';
@@ -16,14 +17,29 @@ import { NullableType } from 'src/utils/types/nullable';
 import { User } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import { Public } from 'src/core/decorator/public.decorator';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UserService } from '../users/user.service';
+import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
 
 @Controller('auth')
+@UseInterceptors(SerializeInterceptor)
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @Post('login')
-  signIn(@Body() data: AuthEmailLoginDto): Promise<LoginResponseDto> {
-    return this.authService.signIn(data);
+  @Public()
+  async signIn(@Body() data: AuthEmailLoginDto): Promise<LoginResponseDto> {
+    return await this.authService.signIn(data);
+  }
+
+  @Post('register')
+  @Public()
+  async register(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.createWithHash(createUserDto);
   }
 
   @Post('refresh')

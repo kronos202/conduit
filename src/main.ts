@@ -8,6 +8,8 @@ import validationOptions from './utils/validation-options';
 import { ConfigService } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import AllConfigType from './config';
+import { PrismaExceptionFilter } from './core/filters/prisma-exeption.filter';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,6 +17,7 @@ async function bootstrap() {
       instance: logger,
     }),
     bufferLogs: true,
+    cors: true,
   });
 
   const configService = app.get(ConfigService<AllConfigType>);
@@ -25,7 +28,10 @@ async function bootstrap() {
   app.setGlobalPrefix(apiPrefix, {
     exclude: ['/'],
   });
+  // app.enableCors();
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
+  app.useGlobalFilters(new PrismaExceptionFilter());
   app.use(helmet());
 
   console.table({

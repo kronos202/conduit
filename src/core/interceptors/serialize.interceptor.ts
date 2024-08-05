@@ -16,11 +16,7 @@ export class SerializeInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         // Giả định rằng status và message là cố định, bạn có thể điều chỉnh theo yêu cầu của bạn
-        return {
-          status: 200,
-          message: 'Success',
-          data: this.removePassword(data),
-        };
+        return this.removePassword(data);
       }),
     );
   }

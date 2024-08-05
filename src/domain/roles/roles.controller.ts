@@ -14,14 +14,14 @@ export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
-  createRole(@Body('name') name: RoleEnum) {
+  createRole(@Body('nameRole') name: keyof typeof RoleEnum) {
     return this.rolesService.createRole(name);
   }
 
   @Post(':userId/assign')
   assignRoleToUser(
     @Param('userId') userId: number,
-    @Body('role') roleName: RoleEnum,
+    @Body('role') roleName: keyof typeof RoleEnum,
   ) {
     return this.rolesService.assignRoleToUser(userId, roleName);
   }
