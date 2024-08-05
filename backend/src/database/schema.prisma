@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  
+}
+
+model User {
+  id       Int     @id @default(autoincrement()) 
+  email    String  @unique
+  username String
+  password String
+  bio      String?
+
+  followers        Follower[]        @relation("UserFollowers")
+  following        Follower[]        @relation("UserFollowing")
+  Article          Article[] 
+  Comment          Comment[]
+  
+  role Role[]
+  session Session[]
+
+  favoriteArticles Article[] @relation("UserFavorites")
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Article {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  content     String
+  
+  favoritesCount Int    @default(0)
+  slug          String  @unique
+  comments Comment[]
+  tags     Tag[]
+  authorId Int
+  author   User      @relation(fields: [authorId], references: [id],onDelete: Cascade)
+  favoritedBy       User[]           @relation(name: "UserFavorites")
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Comment {
+  id        Int    @id @default(autoincrement())
+  content   String
+  authorId  Int
+  articleId Int
+
+  author  User    @relation(fields: [authorId], references: [id],onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id],onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Follower {
+  id          Int  @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  follower    User @relation("UserFollowers", fields: [followerId], references: [id],onDelete: Cascade)
+  following   User @relation("UserFollowing", fields: [followingId], references: [id],onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  articles  Article[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Session {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id],onDelete: Cascade)
+  hash      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? 
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  
+
+  users User[] 
+}
