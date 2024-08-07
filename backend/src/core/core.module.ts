@@ -14,6 +14,8 @@ import { LoggerMiddleware } from './loggers/logger.middleware';
 import appConfig from '../config/app/app.config';
 import authConfig from 'src/config/auth/auth.config';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Global()
 @Module({
@@ -25,6 +27,10 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
     }),
     PrismaModule.forRoot({
       isGlobal: true,
+    }),
+    CacheModule.register({
+      store: redisStore,
+      ttl: 60 * 1000,
     }),
   ],
   providers: [

@@ -68,6 +68,20 @@ export class ArticleService extends BaseService<
     return await this.findWithPagination({ limit: 3, include, where });
   }
 
+  async findArticlesByUserId(userId: number) {
+    const where: Prisma.ArticleWhereInput = {
+      authorId: {
+        equals: userId,
+      },
+    };
+    const include: Prisma.ArticleInclude = {
+      author: true,
+      tags: true,
+    };
+
+    return await this.findWithPagination({ limit: 3, include, where });
+  }
+
   async findAllFavorite(userId: number) {
     const whereInput: Prisma.ArticleWhereInput = {
       favoritedBy: { some: { id: userId } },
@@ -88,9 +102,13 @@ export class ArticleService extends BaseService<
   }
 
   async findBySlug(slug: string) {
-    return await this.databaseService.article.findUniqueOrThrow({
+    return await this.databaseService.article.findUnique({
       where: {
         slug,
+      },
+      include: {
+        author: true,
+        tags: true,
       },
     });
   }

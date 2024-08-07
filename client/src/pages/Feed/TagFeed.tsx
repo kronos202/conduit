@@ -38,8 +38,10 @@ const TagFeed = () => {
       {articles?.map((article, index) =>
         index + 1 === articles.length ? (
           <CardFeed
+            userId={article.author.id}
             slug={article.slug}
-            key={article.slug}
+            id={article.id}
+            key={article.slug + index}
             lastElementRef={lastElementRef}
             avatar={article.author.avatar}
             createdAt={article.createdAt}
@@ -51,7 +53,9 @@ const TagFeed = () => {
           />
         ) : (
           <CardFeed
-            key={article.slug}
+            userId={article.author.id}
+            key={article.slug + index}
+            id={article.id}
             slug={article.slug}
             avatar={article.author.avatar}
             createdAt={article.createdAt}

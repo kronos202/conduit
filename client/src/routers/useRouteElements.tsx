@@ -8,8 +8,9 @@ import SkeletonRegister from "@/components/SkeletonRegister";
 import SkeletonLogin from "@/components/SkeletonLogin";
 import CreateArticle from "@/pages/CreateArticle";
 import { AppContext } from "@/context/app";
-import Profile from "@/pages/Profile";
 import ArticleDetail from "@/pages/ArticleDetail";
+import Setting from "@/pages/Setting";
+import Profile from "@/pages/Profile";
 
 const HomePage = lazy(() => import("@/pages/Home"));
 const RegisterPage = lazy(() => import("@/pages/Register"));
@@ -85,6 +86,16 @@ const useRouteElements = () => {
             <MainLayout>
               <Suspense fallback={<SkeletonRegister />}>
                 <ArticleDetail />
+              </Suspense>
+            </MainLayout>
+          ),
+        },
+        {
+          path: path.setting,
+          element: (
+            <MainLayout>
+              <Suspense fallback={<SkeletonRegister />}>
+                <Setting />
               </Suspense>
             </MainLayout>
           ),

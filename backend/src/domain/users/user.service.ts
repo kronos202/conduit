@@ -35,28 +35,31 @@ export class UserService extends BaseService<
     data: Prisma.UserCreateInput,
     file?: Express.Multer.File,
   ) {
-    console.log(file);
+    try {
+      const hashedPassword = await this.bcryptService.hash(data.password);
+      let avatarUrl: string =
+        'https://api.realworld.io/images/smiley-cyrus.jpeg';
 
-    const hashedPassword = await this.bcryptService.hash(data.password);
-    let avatarUrl: string = 'https://api.realworld.io/images/smiley-cyrus.jpeg';
+      if (file) {
+        const uploadResult = await this.uploadService.uploadFile(file);
+        avatarUrl = uploadResult.secure_url;
+      }
 
-    if (file) {
-      const uploadResult = await this.uploadService.uploadFile(file);
-      avatarUrl = uploadResult.secure_url;
+      const userData: Prisma.UserCreateInput = {
+        email: data.email,
+        password: hashedPassword,
+        username: data.username,
+        avatar: avatarUrl,
+      };
+
+      const user = await this.create(userData);
+
+      await this.rolesService.assignRoleToUser(user.id, 'user');
+
+      return user;
+    } catch (error) {
+      throw error;
     }
-
-    const userData: Prisma.UserCreateInput = {
-      email: data.email,
-      password: hashedPassword,
-      username: data.username,
-      avatar: avatarUrl,
-    };
-
-    const user = await this.create(userData);
-
-    await this.rolesService.assignRoleToUser(user.id, 'user');
-
-    return user;
   }
 
   async findAll() {

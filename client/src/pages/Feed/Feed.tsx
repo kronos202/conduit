@@ -4,13 +4,11 @@ import MyFeed from "./MyFeed";
 import TagFeed from "./TagFeed";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/context/app";
+import FavoriteFeed from "./FavoriteFeed";
 
 const Feed = () => {
   const { tag, setTag } = useContext(AppContext);
   const [activeTab, setActiveTab] = useState<string>("global");
-
-  console.log("activeTab", activeTab);
-  console.log("tag", tag);
 
   useEffect(() => {
     // Chuyển tab khi có giá trị tag
@@ -26,13 +24,15 @@ const Feed = () => {
 
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="global">Global Feed</TabsTrigger>
         <TabsTrigger value="own">Your Feed</TabsTrigger>
+        <TabsTrigger value="favorite">Favorite Feed</TabsTrigger>
         <TabsTrigger value="tag">Tag #{tag}</TabsTrigger>
       </TabsList>
       <GlobalFeed />
       <MyFeed />
+      <FavoriteFeed />
       <TagFeed />
     </Tabs>
   );

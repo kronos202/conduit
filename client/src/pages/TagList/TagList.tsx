@@ -20,6 +20,7 @@ const TagList = () => {
         {tags?.data.data.map((tag: Tags) => (
           <Tag
             onClick={() => setTag(tag.name)}
+            key={tag.name}
             nameTag={tag.name}
             className="text-white bg-gray-600"
           />

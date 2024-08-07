@@ -2,6 +2,7 @@ import HttpStatusCode from "@/constants/httpStatusCode.enum";
 import axios, { AxiosError } from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { parseISO, format } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -10,6 +11,9 @@ export function cn(...inputs: ClassValue[]) {
 export const getArrayTagFromString = (s: string): string[] => {
   return s.split(",").map((item) => item.trim());
 };
+
+export const formattedDate = (time: string) =>
+  format(parseISO(time), "dd/MM/yyyy");
 
 export interface SuccessResponse<Data> {
   message: string;

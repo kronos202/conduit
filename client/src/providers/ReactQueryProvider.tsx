@@ -9,7 +9,9 @@ import { PropsWithChildren, useState } from "react";
 const queryClientConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: 2,
+      refetchOnMount: false,
+      staleTime: 5 * 60 * 1000,
     },
   },
 };

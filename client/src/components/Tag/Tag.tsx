@@ -7,7 +7,7 @@ const Tag = ({
 }: {
   className?: string;
   nameTag: string;
-  onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
+  onClick?: React.MouseEventHandler<HTMLDivElement> | undefined;
 }) => {
   return (
     <div

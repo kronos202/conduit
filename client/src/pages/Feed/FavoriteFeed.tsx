@@ -2,14 +2,15 @@ import CardFeed from "@/components/CardFeed";
 import { LoadingSpinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-import { useMyArticles } from "@/hooks/articles/queries/useMyArticles";
+import { useFavoriteArticles } from "@/hooks/articles/queries/useFavoriteArticles";
 import { useCallback, useRef } from "react";
 
-const MyFeed = () => {
+const FavoriteFeed = () => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
-    useMyArticles();
+    useFavoriteArticles();
   const articles = data?.pages.flatMap((item) => item.data.data.items);
   const scrollRef = useRef<IntersectionObserver | null>(null);
+  console.log(articles);
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -30,14 +31,14 @@ const MyFeed = () => {
     [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]
   );
   return (
-    <TabsContent value="own">
+    <TabsContent value="favorite">
       {articles?.map((article, index) =>
         index + 1 === articles.length ? (
           <CardFeed
             userId={article.author.id}
-            key={article.slug + index}
             id={article.id}
             slug={article.slug}
+            key={article.slug + index}
             lastElementRef={lastElementRef}
             avatar={article.author.avatar}
             createdAt={article.createdAt}
@@ -74,4 +75,4 @@ const MyFeed = () => {
   );
 };
 
-export default MyFeed;
+export default FavoriteFeed;

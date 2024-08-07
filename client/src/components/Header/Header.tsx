@@ -32,7 +32,7 @@ const Header = () => {
                 <p>New Article</p>
               </Link>
               <Avatar>
-                <Link to="/profile">
+                <Link to="/setting">
                   <AvatarImage
                     src="https://github.com/shadcn.png"
                     alt="@shadcn"

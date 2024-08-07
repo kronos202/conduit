@@ -6,6 +6,9 @@ export const ARTICLE_GETALL = "/article/all";
 export const ARTICLE_FAVORITE = "/article/favorite";
 export const ARTICLE_OWN = "/article/myArticles";
 export const ARTICLE_TAG = "/article/byTag";
+export const ARTICLE_USERID = "/article/user";
+export const ARTICLE_TOGGLE_FAVORITE = "/article/toggleFavorite";
+export const ARTICLE_SLUG = "/article";
 export const ALL_TAG = "/tag/allTag";
 
 const articleApi = {
@@ -25,8 +28,17 @@ const articleApi = {
   getMyArticles() {
     return http.get(ARTICLE_OWN);
   },
+  getArticlesByUserId(id: number) {
+    return http.get(`${ARTICLE_USERID}/${id}`);
+  },
   getTagArticles(tagName: string) {
     return http.get(ARTICLE_TAG, { params: { tagName } });
+  },
+  getArticleSlug(slug: string) {
+    return http.get(`${ARTICLE_SLUG}/${slug}`);
+  },
+  postToggleFavorite(id: number) {
+    return http.post(`${ARTICLE_TOGGLE_FAVORITE}/${id}`);
   },
 };
 

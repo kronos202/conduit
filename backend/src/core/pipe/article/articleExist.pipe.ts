@@ -14,6 +14,6 @@ export class ArticleExitPipe implements PipeTransform {
       throw new BadRequestException('Article not found');
     }
 
-    return article;
+    return article.id;
   }
 }

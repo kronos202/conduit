@@ -11,6 +11,7 @@ import {
   HttpStatus,
   Query,
   UseInterceptors,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Prisma } from '@prisma/client';
@@ -19,6 +20,7 @@ import { Public } from 'src/core/decorator/public.decorator';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
 import { ArticleExitPipe } from 'src/core/pipe/article/articleExist.pipe';
 import { getArrayTagFromString } from 'src/utils/transformers/stringToArray';
+import { CacheKey } from '@nestjs/cache-manager';
 
 @Controller('article')
 @UseInterceptors(SerializeInterceptor)
@@ -43,23 +45,30 @@ export class ArticleController {
 
   @Get('all')
   @Public()
+  @CacheKey('ALL_ARTICLES')
   findAll() {
     return this.articleService.findAll();
   }
 
   @Post('toggleFavorite/:id')
-  toggleFavorite(@Request() req, @Param('id', ArticleExitPipe) id: string) {
+  toggleFavorite(@Request() req, @Param('id', ArticleExitPipe) id: number) {
     return this.articleService.toggleFavorite(+id, req.user.id);
   }
 
   @Get('favorite')
+  @CacheKey('FAVORITE_ARTICLES')
   findAllFavorite(@Request() req) {
     return this.articleService.findAllFavorite(req.user.id);
   }
 
   @Get('myArticles')
+  @CacheKey('MY_ARTICLES')
   findMyArticles(@Request() req) {
     return this.articleService.findMyArticles(req.user.id);
+  }
+  @Get('user/:id')
+  findArticlesById(@Param('id', ParseIntPipe) id: number) {
+    return this.articleService.findArticlesByUserId(id);
   }
 
   @Get(':slug')

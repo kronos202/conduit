@@ -2,12 +2,15 @@ import CardFeed from "@/components/CardFeed";
 import { LoadingSpinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-import { useMyArticles } from "@/hooks/articles/queries/useMyArticles";
+import { useArticlesByUserId } from "@/hooks/articles/queries/useArticlesByUserId";
 import { useCallback, useRef } from "react";
+import { useParams } from "react-router-dom";
 
-const MyFeed = () => {
+const FeedByUserId = () => {
+  const params = useParams();
+
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
-    useMyArticles();
+    useArticlesByUserId(params.id as unknown as number);
   const articles = data?.pages.flatMap((item) => item.data.data.items);
   const scrollRef = useRef<IntersectionObserver | null>(null);
 
@@ -34,10 +37,10 @@ const MyFeed = () => {
       {articles?.map((article, index) =>
         index + 1 === articles.length ? (
           <CardFeed
-            userId={article.author.id}
-            key={article.slug + index}
             id={article.id}
+            userId={article.author.id}
             slug={article.slug}
+            key={article.slug + index}
             lastElementRef={lastElementRef}
             avatar={article.author.avatar}
             createdAt={article.createdAt}
@@ -74,4 +77,4 @@ const MyFeed = () => {
   );
 };
 
-export default MyFeed;
+export default FeedByUserId;

@@ -34,8 +34,10 @@ const GlobalFeed = () => {
       {articles?.map((article, index) =>
         index + 1 === articles.length ? (
           <CardFeed
+            id={article.id}
+            userId={article.author.id}
             slug={article.slug}
-            key={article.slug}
+            key={article.slug + index}
             lastElementRef={lastElementRef}
             avatar={article.author.avatar}
             createdAt={article.createdAt}
@@ -47,7 +49,9 @@ const GlobalFeed = () => {
           />
         ) : (
           <CardFeed
-            key={article.slug}
+            id={article.id}
+            userId={article.author.id}
+            key={article.slug + index}
             slug={article.slug}
             avatar={article.author.avatar}
             createdAt={article.createdAt}

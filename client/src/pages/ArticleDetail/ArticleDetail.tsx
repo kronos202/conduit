@@ -1,34 +1,46 @@
+import { LoadingSpinner } from "@/components/spinner";
 import Tag from "@/components/Tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CardDescription, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { AppContext } from "@/context/app";
+import { useArticleSlug } from "@/hooks/articles/queries/useArticleSlug";
+import { formattedDate, Tags } from "@/lib/utils";
 import { FilePenLine, Trash2 } from "lucide-react";
+import { useContext } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const ArticleDetail = () => {
+  const params = useParams();
+  const { setTag } = useContext(AppContext);
+
+  const { article, isLoading } = useArticleSlug(params.slug as string);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <div className="flex-1">
       <div className="container w-full bg-slate-600">
         <div className="h-[170px] ">
           <h2 className="text-6xl font-bold text-white text-start">
-            aaaaaaaaaaaaaaaaaa
+            {article.title}
           </h2>
           <div className="flex items-center gap-12">
             <CardHeader className="flex flex-row items-center gap-4">
               <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
+                <AvatarImage src={article.author.avatar} alt="@shadcn" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start">
                 <CardDescription className="text-base text-green-500">
-                  Maksim Esteban
+                  {article.author.username}
                 </CardDescription>
                 <CardDescription className="text-gray-400">
-                  Maksim Esteban
+                  {formattedDate(article.createdAt)}
                 </CardDescription>
               </div>
             </CardHeader>
@@ -54,13 +66,13 @@ const ArticleDetail = () => {
         </div>
       </div>
       <div className="container mt-5">
-        <p>aaaaaaaaaaaaaaaaaaaa</p>
+        <p>{article.content}</p>
         <div className="flex gap-3">
-          <Tag nameTag="test" />
-          <Tag nameTag="test" />
-          <Tag nameTag="test" />
-          <Tag nameTag="test" />
-          <Tag nameTag="test" />
+          {article.tags.map((tag: Tags) => (
+            <Link to={"/"}>
+              <Tag onClick={() => setTag(tag.name)} nameTag={tag.name} />
+            </Link>
+          ))}
         </div>
       </div>
       <Separator className="my-4" />
