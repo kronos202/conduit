@@ -2,13 +2,17 @@ import CardFeed from "@/components/CardFeed";
 import { LoadingSpinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-import { useMyArticles } from "@/hooks/articles/queries/useMyArticles";
-import { useCallback, useRef } from "react";
+import { AppContext } from "@/context/app";
+import { useTagArticles } from "@/hooks/articles/queries/useTagArticles";
+import { useCallback, useContext, useRef } from "react";
 
-const MyFeed = () => {
-  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
-    useMyArticles();
+const TagFeed = () => {
+  const { tag } = useContext(AppContext);
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useTagArticles(tag);
   const articles = data?.pages.flatMap((item) => item.data.data.items);
+
   const scrollRef = useRef<IntersectionObserver | null>(null);
 
   const lastElementRef = useCallback(
@@ -30,12 +34,12 @@ const MyFeed = () => {
     [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]
   );
   return (
-    <TabsContent value="own">
+    <TabsContent value="tag">
       {articles?.map((article, index) =>
         index + 1 === articles.length ? (
           <CardFeed
-            key={article.slug}
             slug={article.slug}
+            key={article.slug}
             lastElementRef={lastElementRef}
             avatar={article.author.avatar}
             createdAt={article.createdAt}
@@ -70,4 +74,4 @@ const MyFeed = () => {
   );
 };
 
-export default MyFeed;
+export default TagFeed;

@@ -64,6 +64,7 @@ export class ArticleService extends BaseService<
       author: true,
       tags: true,
     };
+
     return await this.findWithPagination({ limit: 3, include, where });
   }
 

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { useGetArticles } from "@/hooks/articles/queries/useGetArticles";
 import { useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
 
 const GlobalFeed = () => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
@@ -34,37 +33,39 @@ const GlobalFeed = () => {
     <TabsContent value="global">
       {articles?.map((article, index) =>
         index + 1 === articles.length ? (
-          <Link to={`/article/${article.slug}`}>
-            <CardFeed
-              key={article.id}
-              lastElementRef={lastElementRef}
-              avatar={article.author.avatar}
-              createdAt={article.createdAt}
-              description={article.description}
-              favoriteCount={article.favoriteCount}
-              tags={article.tags}
-              title={article.title}
-              username={article.author.username}
-            />
-          </Link>
+          <CardFeed
+            slug={article.slug}
+            key={article.slug}
+            lastElementRef={lastElementRef}
+            avatar={article.author.avatar}
+            createdAt={article.createdAt}
+            description={article.description}
+            favoritesCount={article.favoritesCount}
+            tags={article.tags}
+            title={article.title}
+            username={article.author.username}
+          />
         ) : (
-          <Link to={`/article/${article.slug}`}>
-            <CardFeed
-              key={article.id}
-              avatar={article.author.avatar}
-              createdAt={article.createdAt}
-              description={article.description}
-              favoriteCount={article.favoriteCount}
-              tags={article.tags}
-              title={article.title}
-              username={article.author.username}
-            />
-          </Link>
+          <CardFeed
+            key={article.slug}
+            slug={article.slug}
+            avatar={article.author.avatar}
+            createdAt={article.createdAt}
+            description={article.description}
+            favoritesCount={article.favoritesCount}
+            tags={article.tags}
+            title={article.title}
+            username={article.author.username}
+          />
         )
       )}
-      <Button disabled={!hasNextPage} onClick={() => fetchNextPage()}>
-        {isFetchingNextPage ? <LoadingSpinner /> : " Load more..."}
-      </Button>
+      {articles?.length ? (
+        <Button disabled={!hasNextPage} onClick={() => fetchNextPage()}>
+          {isFetchingNextPage ? <LoadingSpinner /> : " Load more..."}
+        </Button>
+      ) : (
+        "khong co bai post nao"
+      )}
     </TabsContent>
   );
 };

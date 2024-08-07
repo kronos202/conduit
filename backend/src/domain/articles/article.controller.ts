@@ -18,6 +18,7 @@ import { Response } from 'express';
 import { Public } from 'src/core/decorator/public.decorator';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
 import { ArticleExitPipe } from 'src/core/pipe/article/articleExist.pipe';
+import { getArrayTagFromString } from 'src/utils/transformers/stringToArray';
 
 @Controller('article')
 @UseInterceptors(SerializeInterceptor)
@@ -34,8 +35,10 @@ export class ArticleController {
 
   @Get('byTag')
   @Public()
-  async findByTag(@Query('tag') tag: string[]) {
-    return await this.articleService.findByTag(tag);
+  async findByTag(@Query('tagName') tag: string) {
+    const tags = getArrayTagFromString(tag);
+
+    return await this.articleService.findByTag(tags);
   }
 
   @Get('all')

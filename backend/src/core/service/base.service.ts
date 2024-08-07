@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
-type OrderBy<T> = { [P in keyof T]?: 'asc' | 'desc' };
+export type OrderBy<T> = { [P in keyof T]?: 'asc' | 'desc' };
 
 export class BaseService<
   CreateDto,
@@ -68,9 +68,11 @@ export class BaseService<
     });
     const totalPages = Math.ceil(totalItems / limit);
 
+    const finalOrderBy = orderBy || { createdAt: 'desc' };
+
     const items = await this.databaseService[this.modelName].findMany({
       where,
-      orderBy,
+      orderBy: finalOrderBy,
       select,
       skip,
       take,

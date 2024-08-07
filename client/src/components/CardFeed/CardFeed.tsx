@@ -8,11 +8,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { HeartIcon } from "@radix-ui/react-icons";
 import { Tags } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import { parseISO, format } from "date-fns";
+import { useContext } from "react";
+import { AppContext } from "@/context/app";
+
 type Props = {
   avatar: string;
   username: string;
   createdAt: string;
-  favoriteCount: number;
+  slug: string;
+  favoritesCount: number;
   description: string;
   title: string;
   tags: Tags[];
@@ -24,11 +30,14 @@ const CardFeed = ({
   title,
   createdAt,
   description,
-  favoriteCount,
+  favoritesCount,
   tags,
   username,
   lastElementRef,
+  slug,
 }: Props) => {
+  const formattedDate = (time: string) => format(parseISO(time), "dd/MM/yyyy");
+  const { setTag } = useContext(AppContext);
   return (
     <Card ref={lastElementRef} className="cursor-pointer">
       <div className="flex items-center justify-between ">
@@ -42,7 +51,7 @@ const CardFeed = ({
               {username}
             </CardDescription>
             <CardDescription className="text-gray-400">
-              {createdAt}
+              {formattedDate(createdAt)}
             </CardDescription>
           </div>
         </CardHeader>
@@ -53,20 +62,28 @@ const CardFeed = ({
             className="flex items-center gap-3 text-white bg-green-500"
           >
             <HeartIcon className="w-4 h-4" stroke="red" />
-            <p>{favoriteCount}</p>
+            <p>{favoritesCount}</p>
           </Button>
         </CardHeader>
       </div>
       <CardContent className="space-y-2">
-        <div className="space-y-1 text-start">
-          <h3 className="text-2xl font-bold text-gray-800">{title}</h3>
-          <p>{description}</p>
-        </div>
+        <Link to={`/articles/${slug}`}>
+          <div className="space-y-1 text-start">
+            <h3 className="text-2xl font-bold text-gray-800 hover:underline">
+              {title}
+            </h3>
+            <p className="hover:underline">{description}</p>
+          </div>
+        </Link>
         <div className="flex items-center justify-between space-y-1">
           <p>Read more...</p>
           <div className="flex gap-3">
             {tags?.map((tag) => (
-              <p className="p-1 border border-gray-500 rounded-xl">
+              <p
+                onClick={() => setTag(tag.name)}
+                key={tag.name}
+                className="p-1 border border-gray-500 rounded-xl"
+              >
                 {tag.name}
               </p>
             ))}
