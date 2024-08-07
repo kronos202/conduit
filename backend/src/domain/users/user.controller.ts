@@ -5,10 +5,13 @@ import {
   Patch,
   Param,
   UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Public } from 'src/core/decorator/public.decorator';
 
 @Controller('users')
 @UseInterceptors(SerializeInterceptor)
@@ -26,7 +29,13 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @UseInterceptors(FileInterceptor('avatar'))
+  @Public()
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.userService.update(+id, updateUserDto, file);
   }
 }

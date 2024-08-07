@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import "./App.css";
 import { LocalStorageEventTarget } from "./lib/auth";
-import { AppContext } from "./context/app.context";
+import { AppContext } from "./context/app";
 import useRouteElements from "./routers/useRouteElements";
 
 function App() {

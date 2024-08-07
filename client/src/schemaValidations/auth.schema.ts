@@ -14,6 +14,7 @@ export const RegisterBody = z
     email: z.string().email().min(8),
     password: z.string().min(8),
     username: z.string().min(8),
+    avatar: z.string().optional(),
   })
   .strict();
 

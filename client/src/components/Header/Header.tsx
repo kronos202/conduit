@@ -1,4 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
+import { SquarePen } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import DropdownMenuAuth from "../DropDown";
 
 const Header = () => {
   const location = useLocation();
@@ -20,28 +23,28 @@ const Header = () => {
                 <p>Home</p>
               </Link>
               <Link
-                to="/login"
-                className={`${
-                  location.pathname === "/login" ? "text-gray-600" : ""
-                } font-bold text-base text-gray-400 hover:text-gray-600`}
-              >
-                <p>Sign In</p>
-              </Link>
-              <Link
-                to="/register"
+                to="/editor"
                 className={`${
                   location.pathname === "/register" ? "text-gray-600" : ""
-                } font-bold text-base text-gray-400 hover:text-gray-600`}
+                } font-bold text-base text-gray-400 hover:text-gray-600 flex items-center gap-1`}
               >
-                <p>Sign Up</p>
+                <SquarePen />
+                <p>New Article</p>
               </Link>
+              <Avatar>
+                <Link to="/profile">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                    className="cursor-pointer"
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Link>
+              </Avatar>
+              <DropdownMenuAuth />
             </div>
           </div>
         </nav>
-      </div>
-      <div className="container mt-4 bg-green-500 w-full h-[170px] flex flex-col items-center justify-center gap-3">
-        <h1 className="text-white text-6xl font-bold">conduit</h1>
-        <p className="text-2xl text-white">A place to share your knowledge.</p>
       </div>
     </header>
   );

@@ -1,8 +1,21 @@
+import HomeBanner from "@/components/Banner";
+import Feed from "../Feed";
+import TagList from "../TagList/TagList";
+
 const Home = () => {
   return (
-    <div className="container flex">
-      <div className="flex-[8] bg-red-500 h-[250px]"></div>
-      <div className="flex-[2] bg-green-500 h-[250px]"></div>
+    <div>
+      <HomeBanner />
+      <div className="container flex-1">
+        <div className="flex">
+          <div className="flex-[8]">
+            <Feed />
+          </div>
+          <div className="flex-[2]">
+            <TagList />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

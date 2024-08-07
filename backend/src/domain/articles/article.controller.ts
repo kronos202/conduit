@@ -54,6 +54,17 @@ export class ArticleController {
     return this.articleService.findAllFavorite(req.user.id);
   }
 
+  @Get('myArticles')
+  findMyArticles(@Request() req) {
+    return this.articleService.findMyArticles(req.user.id);
+  }
+
+  @Get(':slug')
+  @Public()
+  findBySlug(@Param('slug') slug: string) {
+    return this.articleService.findBySlug(slug);
+  }
+
   @Patch(':id')
   async update(
     @Param('id', ArticleExitPipe) id: string,

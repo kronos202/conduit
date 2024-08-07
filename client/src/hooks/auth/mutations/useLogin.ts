@@ -1,5 +1,5 @@
 import authApi from "@/apis/auth.api";
-import { AppContext } from "@/context/app.context";
+import { AppContext } from "@/context/app";
 import { ErrorResponse, isAxiosUnprocessableEntityError } from "@/lib/utils";
 import { LoginBodyType } from "@/schemaValidations/auth.schema";
 import { useMutation } from "@tanstack/react-query";

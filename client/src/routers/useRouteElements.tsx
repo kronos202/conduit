@@ -1,35 +1,43 @@
-import { Suspense, useContext } from "react";
+import { lazy, Suspense, useContext } from "react";
 import { Navigate, Outlet, useRoutes } from "react-router-dom";
-import { AppContext } from "@/context/app.context";
 import path from "@/constants/path";
 import AuthLayout from "@/layouts/AuthLayout";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
 import Home from "@/pages/Home";
 import MainLayout from "@/layouts/MainLayout";
+import SkeletonRegister from "@/components/SkeletonRegister";
+import SkeletonLogin from "@/components/SkeletonLogin";
+import CreateArticle from "@/pages/CreateArticle";
+import { AppContext } from "@/context/app";
+import Profile from "@/pages/Profile";
+import ArticleDetail from "@/pages/ArticleDetail";
+
+const HomePage = lazy(() => import("@/pages/Home"));
+const RegisterPage = lazy(() => import("@/pages/Register"));
+const LoginPage = lazy(() => import("@/pages/Login"));
+
+export function ProtectedRoute() {
+  const { isAuthenticated } = useContext(AppContext);
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+}
+
+export function RejectedRoute() {
+  const { isAuthenticated } = useContext(AppContext);
+
+  return !isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+}
 
 const useRouteElements = () => {
   const routeElements = useRoutes([
     {
       path: "",
+      element: <RejectedRoute />,
       children: [
-        {
-          path: path.home,
-          index: true,
-          element: (
-            <MainLayout>
-              <Suspense>
-                <Home />
-              </Suspense>
-            </MainLayout>
-          ),
-        },
         {
           path: path.login,
           element: (
             <AuthLayout>
-              <Suspense>
-                <Login />
+              <Suspense fallback={<SkeletonLogin />}>
+                <LoginPage />
               </Suspense>
             </AuthLayout>
           ),
@@ -38,10 +46,57 @@ const useRouteElements = () => {
           path: path.register,
           element: (
             <AuthLayout>
-              <Suspense>
-                <Register />
+              <Suspense fallback={<SkeletonRegister />}>
+                <RegisterPage />
               </Suspense>
             </AuthLayout>
+          ),
+        },
+      ],
+    },
+    {
+      path: path.home,
+      index: true,
+      element: (
+        <MainLayout>
+          <Suspense>
+            <Home />
+          </Suspense>
+        </MainLayout>
+      ),
+    },
+    {
+      path: "",
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: path.editor,
+          element: (
+            <MainLayout>
+              <Suspense fallback={<SkeletonRegister />}>
+                <CreateArticle />
+              </Suspense>
+            </MainLayout>
+          ),
+        },
+        {
+          path: path.articleDetail,
+          element: (
+            <MainLayout>
+              <Suspense fallback={<SkeletonRegister />}>
+                <ArticleDetail />
+              </Suspense>
+            </MainLayout>
+          ),
+        },
+        {
+          path: path.profile,
+          element: (
+            <MainLayout>
+              <Suspense fallback={<SkeletonRegister />}>
+                <Profile />
+              </Suspense>
+            </MainLayout>
           ),
         },
       ],

@@ -6,6 +6,7 @@ import {
   Post,
   Request,
   Res,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,6 +22,7 @@ import { Public } from 'src/core/decorator/public.decorator';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserService } from '../users/user.service';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 @UseInterceptors(SerializeInterceptor)
@@ -37,9 +39,13 @@ export class AuthController {
   }
 
   @Post('register')
+  @UseInterceptors(FileInterceptor('avatar'))
   @Public()
-  async register(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.createWithHash(createUserDto);
+  async register(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return await this.userService.createWithHash(createUserDto, file);
   }
 
   @Post('refresh')

@@ -29,4 +29,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsOptional()
   bio?: string | null;
+
+  @IsOptional()
+  avatar?: string;
 }

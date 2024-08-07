@@ -7,9 +7,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const getArrayTagFromString = (s: string): string[] => {
+  return s.split(",").map((item) => item.trim());
+};
+
 export interface SuccessResponse<Data> {
   message: string;
   data: Data;
+}
+
+export interface Tags {
+  name: string;
 }
 export interface ErrorResponse {
   status: number;

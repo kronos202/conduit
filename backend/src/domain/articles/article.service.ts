@@ -25,10 +25,6 @@ export class ArticleService extends BaseService<
     const genslug = slugify(data.title);
     const uniqueSlug = await this.generateUniqueSlug(genslug);
 
-    console.log(data.tags);
-    console.log(genslug);
-    console.log(uniqueSlug);
-
     const tagConnectOrCreate = data.tags.map((tagName) => ({
       where: { name: tagName },
       create: { name: tagName },
@@ -52,10 +48,26 @@ export class ArticleService extends BaseService<
   }
 
   async findAll() {
-    return await this.findWithPagination({ limit: 3 });
+    const include: Prisma.ArticleInclude = {
+      author: true,
+      tags: true,
+    };
+    return await this.findWithPagination({ limit: 3, include });
+  }
+  async findMyArticles(userId: number) {
+    const where: Prisma.ArticleWhereInput = {
+      authorId: {
+        equals: userId,
+      },
+    };
+    const include: Prisma.ArticleInclude = {
+      author: true,
+      tags: true,
+    };
+    return await this.findWithPagination({ limit: 3, include, where });
   }
 
-  findAllFavorite(userId: number) {
+  async findAllFavorite(userId: number) {
     const whereInput: Prisma.ArticleWhereInput = {
       favoritedBy: { some: { id: userId } },
     };
@@ -63,7 +75,7 @@ export class ArticleService extends BaseService<
       tags: true,
       author: true,
     };
-    return this.findWithPagination({
+    return await this.findWithPagination({
       where: whereInput,
       include: inCludeInput,
       limit: 3,
@@ -72,6 +84,14 @@ export class ArticleService extends BaseService<
 
   async findOne(id: number) {
     return await this.findOrFailById(id);
+  }
+
+  async findBySlug(slug: string) {
+    return await this.databaseService.article.findUniqueOrThrow({
+      where: {
+        slug,
+      },
+    });
   }
 
   async findByTag(tagNames: string[]) {

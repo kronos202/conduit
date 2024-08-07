@@ -12,6 +12,7 @@ import { SessionService } from '../sessions/session.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
 import { BcryptService } from 'src/core/service/bcrypt.service';
+import { UploadModule } from 'src/upload/upload.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { BcryptService } from 'src/core/service/bcrypt.service';
     RoleModule,
     SessionModule,
     PassportModule,
+    UploadModule,
     JwtModule.register({}),
   ],
   providers: [

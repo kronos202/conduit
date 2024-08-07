@@ -27,4 +27,7 @@ export class CreateUserDto {
 
   @IsOptional()
   bio?: string | null;
+
+  @IsOptional()
+  avatar?: string;
 }

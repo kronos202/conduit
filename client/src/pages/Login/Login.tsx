@@ -39,8 +39,10 @@ const Login = () => {
   return (
     <div className="mx-auto w-[500px] bg-gray-100 p-5 rounded-md">
       <div className="mb-4">
-        <h2 className="font-semibold text-4xl">Sign In</h2>
-        <Link to="/login">Have an account?</Link>
+        <h2 className="text-4xl font-semibold text-green-500">Sign In</h2>
+        <Link to="/register" className="underline">
+          Do not have an account?
+        </Link>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -51,7 +53,7 @@ const Login = () => {
               <FormItem>
                 <FormControl>
                   <Input
-                    className="p-6 shadow-md border-gray-300"
+                    className="p-6 border-gray-300 shadow-md"
                     placeholder="email"
                     type="email"
                     {...field}
@@ -68,7 +70,7 @@ const Login = () => {
               <FormItem className="mt-4">
                 <FormControl>
                   <Input
-                    className="p-6 shadow-md border-gray-300"
+                    className="p-6 border-gray-300 shadow-md"
                     placeholder="password"
                     type="password"
                     {...field}

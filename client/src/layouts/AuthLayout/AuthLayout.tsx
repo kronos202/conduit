@@ -8,7 +8,7 @@ type Props = {
 
 const AuthLayout = ({ children }: Props) => {
   return (
-    <div className="min-h-[100vh] w-full relative">
+    <div className="w-full min-h-[100vh] flex flex-col justify-between">
       <AuthHeader />
       {children}
       <Footer />

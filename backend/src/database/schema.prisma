@@ -20,6 +20,7 @@ model User {
   username String
   password String
   bio      String?
+  avatar String? @default("https://api.realworld.io/images/smiley-cyrus.jpeg")
 
   followers        Follower[]        @relation("UserFollowers")
   following        Follower[]        @relation("UserFollowing")
