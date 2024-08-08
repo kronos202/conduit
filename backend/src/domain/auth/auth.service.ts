@@ -19,7 +19,6 @@ import { PrismaService } from 'nestjs-prisma';
 import { JwtRefreshPayloadType } from './strategy/types/jwt-refresh-payload.type';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { JwtPayloadType } from './strategy/types/jwt-payload.type';
-import { NullableType } from 'src/utils/types/nullable';
 import { BcryptService } from 'src/core/service/bcrypt.service';
 
 @Injectable()
@@ -115,8 +114,16 @@ export class AuthService {
     };
   }
 
-  async me(userJwtPayload: JwtPayloadType): Promise<NullableType<User>> {
-    return await this.userService.findOne(userJwtPayload.id);
+  async me(userJwtPayload: JwtPayloadType) {
+    return await this.databaseService.user.findFirst({
+      where: {
+        id: userJwtPayload.id,
+      },
+      include: {
+        followers: true,
+        following: true,
+      },
+    });
   }
 
   private async getTokensData(data: {

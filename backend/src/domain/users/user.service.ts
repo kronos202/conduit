@@ -71,7 +71,15 @@ export class UserService extends BaseService<
   }
 
   async findOne(id: number) {
-    return await this.findById(+id);
+    return await this.databaseService.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        followers: true,
+        following: true,
+      },
+    });
   }
 
   async update(

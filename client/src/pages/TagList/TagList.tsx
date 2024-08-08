@@ -7,9 +7,7 @@ import { useContext } from "react";
 
 const TagList = () => {
   const { tags } = useTags();
-  const { setTag, tag } = useContext(AppContext);
-
-  console.log(tag);
+  const { setTag } = useContext(AppContext);
 
   return (
     <Card className="w-[350px]">

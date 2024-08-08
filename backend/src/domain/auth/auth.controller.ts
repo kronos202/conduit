@@ -51,8 +51,6 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
   public refresh(@Request() request): Promise<RefreshResponseDto> {
-    console.log(request.user);
-
     return this.authService.refreshToken({
       sessionId: request.user.sessionId,
       hash: request.user.hash,
@@ -61,8 +59,6 @@ export class AuthController {
 
   @Get('me')
   public me(@Request() request): Promise<NullableType<User>> {
-    console.log(request.user);
-
     return this.authService.me(request.user);
   }
 

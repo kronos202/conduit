@@ -1,8 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
-
-export type OrderBy<T> = { [P in keyof T]?: 'asc' | 'desc' };
+import { OrderBy } from 'src/utils/types/orderBy';
 
 export class BaseService<
   CreateDto,

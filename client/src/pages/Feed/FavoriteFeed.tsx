@@ -10,7 +10,6 @@ const FavoriteFeed = () => {
     useFavoriteArticles();
   const articles = data?.pages.flatMap((item) => item.data.data.items);
   const scrollRef = useRef<IntersectionObserver | null>(null);
-  console.log(articles);
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement | null) => {

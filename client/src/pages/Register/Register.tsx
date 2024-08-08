@@ -34,8 +34,6 @@ const Register = () => {
   function onSubmit(values: RegisterBodyType) {
     register(values);
 
-    console.log(isSuccess);
-
     if (isSuccess) {
       form.reset({ email: "", password: "", username: "" });
       navigate("/login");

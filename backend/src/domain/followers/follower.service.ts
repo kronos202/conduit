@@ -24,18 +24,19 @@ export class FollowerService {
         followerId,
         followingId,
       },
+      include: {
+        follower: true,
+        following: true,
+      },
     });
   }
 
   async unfollowUser(data: Prisma.FollowerUncheckedCreateInput) {
     const { followerId, followingId } = data;
 
-    return await this.databaseService.follower.delete({
+    await this.databaseService.follower.delete({
       where: {
-        followerId_followingId: {
-          followerId,
-          followingId,
-        },
+        followerId_followingId: { followerId, followingId },
       },
     });
   }
@@ -43,10 +44,10 @@ export class FollowerService {
   async getFollowers(userId: number) {
     return this.databaseService.follower.findMany({
       where: {
-        followingId: userId,
+        followerId: userId,
       },
       include: {
-        follower: true,
+        following: true,
       },
     });
   }
@@ -54,10 +55,10 @@ export class FollowerService {
   async getFollowing(userId: number) {
     return this.databaseService.follower.findMany({
       where: {
-        followerId: userId,
+        followingId: userId,
       },
       include: {
-        following: true,
+        follower: true,
       },
     });
   }

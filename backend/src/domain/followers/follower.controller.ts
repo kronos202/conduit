@@ -8,42 +8,40 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { FollowerService } from './follower.service';
-import { CreateFollowerDto } from './dto/create-follower.dto';
-import { UpdateFollowerDto } from './dto/update-follower.dto';
 
-@Controller('follower')
+@Controller('followers')
 export class FollowerController {
   constructor(private readonly followerService: FollowerService) {}
 
-  @Post(':followerId/:followingId')
+  @Post('/:followingId')
   async followUser(
-    @Param('followerId', ParseIntPipe) followingId: number,
+    @Param('followingId', ParseIntPipe) followingId: number,
     @Request() req,
   ) {
     return this.followerService.followUser({
-      followerId: req.user.id,
-      followingId,
+      followerId: followingId,
+      followingId: req.user.id,
     });
   }
 
-  @Delete(':followerId/:followingId')
+  @Delete(':followingId')
   async unfollowUser(
     @Param('followingId', ParseIntPipe) followingId: number,
     @Request() req,
   ) {
-    return this.followerService.unfollowUser({
-      followerId: req.user.id,
-      followingId,
+    return await this.followerService.unfollowUser({
+      followerId: followingId,
+      followingId: req.user.id,
     });
   }
 
-  @Get('followers/:userId')
-  async getFollowers(@Request() req) {
-    return this.followerService.getFollowers(req.user.id);
+  @Get('follower/:id')
+  async getFollowers(@Param('id', ParseIntPipe) id: number) {
+    return this.followerService.getFollowers(id);
   }
 
-  @Get('following/:userId')
-  async getFollowing(@Request() req) {
-    return this.followerService.getFollowing(req.user.id);
+  @Get('following/:id')
+  async getFollowing(@Param('id', ParseIntPipe) id: number) {
+    return this.followerService.getFollowing(id);
   }
 }
