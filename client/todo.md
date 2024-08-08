@@ -2,7 +2,7 @@
 
 - add feature follow (ok)
 - get list follower + following of user (ok)
-- edit profile
+- edit profile (ok)
 - add comment to article
 
 9/8

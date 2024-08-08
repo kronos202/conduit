@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { useGetFollowing } from "@/hooks/follows/useGetFollowing";
+import { useGetFollowing } from "@/hooks/follows/queries/useGetFollowing";
 import { Link, useParams } from "react-router-dom";
 
 const Following = () => {

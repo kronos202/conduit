@@ -1,10 +1,10 @@
 import { UserPlus, UserRoundX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useFollowUser } from "@/hooks/follows/useFollowUser";
+import { useFollowUser } from "@/hooks/follows/mutations/useFollowUser";
 import { useContext } from "react";
 import { AppContext } from "@/context/app";
 import { useParams } from "react-router-dom";
-import { useUnfollowUser } from "@/hooks/follows/useUnfollowUser";
+import { useUnfollowUser } from "@/hooks/follows/mutations/useUnfollowUser";
 import { useMe } from "@/hooks/auth/queries/useMe";
 import { useGetById } from "@/hooks/auth/queries/useGetById";
 
@@ -18,7 +18,7 @@ const BannerProfile = () => {
 
   const isNotMyProfile = Number(profile?.id) !== Number(params.id);
   const isFollow = () =>
-    data?.data.data.following.some(
+    data.following.some(
       (follower) => follower?.followerId === Number(params.id)
     );
 

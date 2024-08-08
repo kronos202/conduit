@@ -6,6 +6,7 @@ import {
   Param,
   UseInterceptors,
   UploadedFile,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -28,14 +29,8 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-  @Patch(':id')
-  @UseInterceptors(FileInterceptor('avatar'))
-  @Public()
-  update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile() file?: Express.Multer.File,
-  ) {
-    return this.userService.update(+id, updateUserDto, file);
+  @Patch('')
+  update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(req.user.id, updateUserDto);
   }
 }

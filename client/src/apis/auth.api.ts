@@ -1,10 +1,12 @@
 import http from "@/lib/http";
+import { EditProfileBodyType } from "@/schemaValidations/auth.schema";
 
 export const URL_LOGIN = "/auth/login";
 export const URL_REGISTER = "/auth/register";
 export const URL_GETUSERBYID = "/users";
 export const URL_LOGOUT = "logout";
 export const URL_ME = "/auth/me";
+export const URL_EDITME = "/users";
 
 const authApi = {
   registerAccount(body: { email: string; password: string; username: string }) {
@@ -21,6 +23,9 @@ const authApi = {
   },
   logout() {
     return http.post(URL_LOGOUT);
+  },
+  editMe(body: EditProfileBodyType) {
+    return http.patch(URL_EDITME, body);
   },
 };
 

@@ -5,6 +5,7 @@ export const useMe = () => {
   const { data } = useQuery({
     queryKey: ["me"],
     queryFn: () => authApi.me(),
+    select: (data) => data.data.data,
   });
 
   return { data };

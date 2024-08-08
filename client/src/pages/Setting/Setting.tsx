@@ -7,8 +7,15 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import EditProfile from "./EditSetting";
+import { useMe } from "@/hooks/auth/queries/useMe";
+import { useContext } from "react";
+import { AppContext } from "@/context/app";
 
 const Setting = () => {
+  // const { profile } = useContext(AppContext);
+  const { data } = useMe();
+  console.log(data);
+
   return (
     <div className="flex items-center justify-center">
       <Card className="min-w-[350px] ">
@@ -22,27 +29,27 @@ const Setting = () => {
             <div className="grid items-center w-full gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label className="text-xl font-bold" htmlFor="name">
-                  Name
+                  Username
                 </Label>
-                <div>test user name lol</div>
+                <div>{data?.username}</div>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label className="text-xl font-bold" htmlFor="name">
                   Email
                 </Label>
-                <div>test user name lol</div>
+                <div>{data?.email}</div>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label className="text-xl font-bold" htmlFor="name">
                   Password
                 </Label>
-                <div>test user name lol</div>
+                <div>**********</div>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label className="text-xl font-bold" htmlFor="name">
                   Bio
                 </Label>
-                <div>test user name lol</div>
+                <div>{data?.bio}</div>
               </div>
             </div>
           </form>
