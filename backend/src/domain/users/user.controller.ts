@@ -5,14 +5,11 @@ import {
   Patch,
   Param,
   UseInterceptors,
-  UploadedFile,
   Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Public } from 'src/core/decorator/public.decorator';
 
 @Controller('users')
 @UseInterceptors(SerializeInterceptor)

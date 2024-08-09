@@ -44,7 +44,7 @@ export class CommentService {
 
     if (!comment || comment.authorId !== userId) {
       throw new ForbiddenException(
-        'You are not authorized to update this comment',
+        'You are not authorized to update this comment.',
       );
     }
     return await this.databaseService.comment.update({

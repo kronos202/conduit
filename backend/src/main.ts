@@ -28,7 +28,6 @@ async function bootstrap() {
   app.setGlobalPrefix(apiPrefix, {
     exclude: ['/'],
   });
-  // app.enableCors();
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
   app.useGlobalFilters(new PrismaExceptionFilter());
