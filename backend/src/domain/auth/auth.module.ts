@@ -13,6 +13,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
 import { BcryptService } from 'src/core/service/bcrypt.service';
 import { UploadModule } from 'src/upload/upload.module';
+import { LocalStrategy } from './strategy/local.strategy';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UploadModule } from 'src/upload/upload.module';
     JwtStrategy,
     BcryptService,
     JwtRefreshStrategy,
+    LocalStrategy,
   ],
   controllers: [AuthController],
 })

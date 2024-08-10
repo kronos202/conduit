@@ -1,5 +1,8 @@
 import http from "@/lib/http";
-import { CreateArticleBodyType } from "@/schemaValidations/article.schema";
+import {
+  CreateArticleBodyType,
+  UpdateArticleBodyType,
+} from "@/schemaValidations/article.schema";
 
 export const ARTICLE_CREATE = "/article/create";
 export const ARTICLE_GETALL = "/article/all";
@@ -9,11 +12,19 @@ export const ARTICLE_TAG = "/article/byTag";
 export const ARTICLE_USERID = "/article/user";
 export const ARTICLE_TOGGLE_FAVORITE = "/article/toggleFavorite";
 export const ARTICLE_SLUG = "/article";
+export const ARTICLE_DELETE = "/article";
+export const ARTICLE_UPDATE = "/article";
 export const ALL_TAG = "/tag/allTag";
 
 const articleApi = {
   create(body: CreateArticleBodyType) {
     return http.post(ARTICLE_CREATE, body);
+  },
+  remove(slug: string) {
+    return http.delete(`${ARTICLE_DELETE}/${slug}`);
+  },
+  update(slug: string, body: UpdateArticleBodyType) {
+    return http.patch(`${ARTICLE_UPDATE}/${slug}`, body);
   },
 
   getAll() {

@@ -15,10 +15,10 @@ export const useLogin = () => {
     isSuccess,
   } = useMutation({
     mutationFn: (data: LoginBodyType) => authApi.login(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Đăng nhập thành công");
       setIsAuthenticated(true);
-      setProfile(data.data.data.user);
+      // setProfile(data.data.data.user);
     },
     onError(error) {
       if (isAxiosUnprocessableEntityError<ErrorResponse>(error)) {

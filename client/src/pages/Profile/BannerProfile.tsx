@@ -18,7 +18,7 @@ const BannerProfile = () => {
 
   const isNotMyProfile = Number(profile?.id) !== Number(params.id);
   const isFollow = () =>
-    data.following.some(
+    data?.following?.some(
       (follower) => follower?.followerId === Number(params.id)
     );
 

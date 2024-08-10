@@ -47,6 +47,43 @@ export class ArticleService extends BaseService<
     });
   }
 
+  async update(
+    slug: string,
+    data: Prisma.ArticleUpdateInput & { tags: string[] },
+    userId: number,
+  ) {
+    const { tags, content, description, title } = data; //as
+    let slugUpdate: string;
+    if (title) {
+      slugUpdate = slugify(title as string);
+      slugUpdate = await this.generateUniqueSlug(slugUpdate);
+    }
+    let tagConnectOrCreate = undefined;
+    if (tags) {
+      tagConnectOrCreate = data.tags.map((tagName) => ({
+        where: { name: tagName },
+        create: { name: tagName },
+      }));
+    }
+
+    return this.databaseService.article.update({
+      where: { slug, authorId: userId },
+      data: {
+        title,
+        description,
+        content,
+        slug: slugUpdate,
+        tags: {
+          connectOrCreate: tagConnectOrCreate,
+        },
+      },
+      include: {
+        tags: true,
+        author: true,
+      },
+    });
+  }
+
   async findAll() {
     const include: Prisma.ArticleInclude = {
       author: true,
@@ -135,49 +172,13 @@ export class ArticleService extends BaseService<
     });
   }
 
-  async update(
-    articleId: number,
-    data: Prisma.ArticleUpdateInput & { tags: string[] },
-    userId: number,
-  ) {
-    await this.checkAuthorization(articleId, userId);
-
-    const { tags, content, description, title } = data;
-    let slug: string;
-    if (title) {
-      slug = slugify(title as string);
-      slug = await this.generateUniqueSlug(slug);
-    }
-    let tagConnectOrCreate;
-    if (tags) {
-      tagConnectOrCreate = tags.map((tagName) => ({
-        connectOrCreate: {
-          where: { name: tagName },
-          create: { name: tagName },
-        },
-      }));
-    }
-
-    return this.databaseService.article.update({
-      where: { id: articleId },
-      data: {
-        title,
-        description,
-        content,
+  async remove(slug: string, userId: number) {
+    return await this.databaseService.article.delete({
+      where: {
         slug,
-        tags: tags ? { connectOrCreate: tagConnectOrCreate } : undefined,
-      },
-      include: {
-        tags: true,
-        author: true,
+        authorId: userId,
       },
     });
-  }
-
-  async remove(articleId: number, userId: number) {
-    await this.checkAuthorization(articleId, userId);
-
-    return await this.deleteOrFailById(articleId);
   }
 
   async toggleFavorite(articleId: number, userId: number): Promise<Article> {

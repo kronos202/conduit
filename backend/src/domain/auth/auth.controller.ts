@@ -23,6 +23,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserService } from '../users/user.service';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { LocalAuthGuard } from 'src/core/guard/local.guard';
 
 @Controller('auth')
 @UseInterceptors(SerializeInterceptor)
@@ -34,6 +35,7 @@ export class AuthController {
 
   @Post('login')
   @Public()
+  @UseGuards(LocalAuthGuard)
   async signIn(@Body() data: AuthEmailLoginDto): Promise<LoginResponseDto> {
     return await this.authService.signIn(data);
   }

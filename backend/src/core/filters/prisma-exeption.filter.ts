@@ -13,15 +13,17 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     let errors = {
-      message: 'Internal Server Error',
+      message: 'Internal Server Error.',
     };
-    const targetFieldError = exception.meta.target[0];
+    console.log(exception);
+    const targetFieldError = exception.meta?.cause ?? exception.meta?.target[0];
+
     // Handle different Prisma errors
     switch (exception.code) {
       case 'P2002': // Unique constraint failed
         statusCode = HttpStatus.CONFLICT;
         errors = {
-          message: `${targetFieldError} đã được sử dụng`,
+          message: `${targetFieldError} đã được sử dụng.`,
         };
 
         break;

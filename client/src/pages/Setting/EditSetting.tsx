@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -25,28 +24,31 @@ import {
   EditProfileBody,
   EditProfileBodyType,
 } from "@/schemaValidations/auth.schema";
-import { useMe } from "@/hooks/auth/queries/useMe";
 import { useEditMe } from "@/hooks/auth/mutations/useEditMe";
+import { useContext } from "react";
+import { AppContext } from "@/context/app";
 
 const EditProfile = () => {
-  const { data } = useMe();
   const { edit } = useEditMe();
+  const { profile } = useContext(AppContext);
 
-  console.log(data);
+  console.log(profile);
 
   const form = useForm<EditProfileBodyType>({
     resolver: zodResolver(EditProfileBody),
     defaultValues: {
-      username: data?.username,
-      bio: data?.bio,
-      email: data?.email,
+      username: profile?.username,
+      bio: profile?.bio || "chưa có bio",
+      email: profile?.email,
       password: "*********",
     },
   });
 
   function onSubmit(values: EditProfileBodyType) {
     if (values.password === "*********") values.password = undefined;
-    console.log(values);
+    if (values.bio === "chưa có bio") values.bio = undefined;
+    if (values.email === profile?.email) values.email = undefined;
+    if (values.username === profile?.username) values.username = undefined;
 
     edit(values);
   }
@@ -59,22 +61,8 @@ const EditProfile = () => {
         <SheetHeader>
           <SheetTitle>Edit profile</SheetTitle>
         </SheetHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="username"
@@ -82,7 +70,20 @@ const EditProfile = () => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -95,7 +96,7 @@ const EditProfile = () => {
                 <FormItem>
                   <FormLabel>password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="password" {...field} />
+                    <Input type="password" placeholder="shadcn" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,7 +109,7 @@ const EditProfile = () => {
                 <FormItem>
                   <FormLabel>bio</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="bio" {...field} />
+                    <Input placeholder="shadcn" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

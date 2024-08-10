@@ -21,23 +21,19 @@ import { Public } from 'src/core/decorator/public.decorator';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post('create/:articleId')
+  @Post('create/:slug')
   async create(
     @Body() content: CreateCommentDto,
     @Request() req,
-    @Param('articleId') articleId: string,
+    @Param('slug') slug: string,
   ) {
-    return await this.commentService.create(
-      content.content,
-      req.user.id,
-      +articleId,
-    );
+    return await this.commentService.create(content.content, req.user.id, slug);
   }
 
-  @Get('byArticle/:id')
+  @Get('byArticle/:slug')
   @Public()
-  async findAll(@Param('id', ParseIntPipe) articleId: number) {
-    return await this.commentService.getCommentsByArticleId(articleId);
+  async findAll(@Param('slug') slug: string) {
+    return await this.commentService.getCommentsByArticleId(slug);
   }
 
   @Get(':id')
@@ -46,22 +42,29 @@ export class CommentController {
     return await this.commentService.getCommentById(commentId);
   }
 
-  @Patch(':id')
+  @Patch('/:slug/:commentId')
   async update(
-    @Param('id') id: string,
+    @Param('slug') slug: string,
+    @Param('commentId') commentId: string,
     @Body() data: UpdateCommentDto,
     @Request() req,
   ) {
     return await this.commentService.updateComment(
-      +id,
+      +commentId,
+      slug,
       data.content,
       req.user.id,
     );
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string, @Request() req, @Res() res: Response) {
-    await this.commentService.deleteComment(+id, req.user.id);
+  @Delete('/:slug/:commentId')
+  async remove(
+    @Param('slug') slug: string,
+    @Param('commentId') commentId: string,
+    @Request() req,
+    @Res() res: Response,
+  ) {
+    await this.commentService.deleteComment(+commentId, req.user.id, slug);
     return res.status(HttpStatus.OK).json({ message: 'delete succesfully!' });
   }
 }

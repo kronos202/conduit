@@ -3,10 +3,12 @@
 - add feature follow (ok)
 - get list follower + following of user (ok)
 - edit profile (ok)
-- add comment to article
+- add + delete + getall + update comment to article (oke)
 
 9/8
 
-- edit + delete article
+- edit + delete article (oke)
 - logout
-- edit setting
+- edit setting (oke)
+- local guard (ok)
+- custome lại usecontext thành hook

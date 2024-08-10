@@ -77,22 +77,22 @@ export class ArticleController {
     return this.articleService.findBySlug(slug);
   }
 
-  @Patch(':id')
+  @Patch(':slug')
   async update(
-    @Param('id', ArticleExitPipe) id: string,
+    @Param('slug') slug: string,
     @Body() data: Prisma.ArticleUpdateInput & { tags: string[] },
     @Request() req,
   ) {
-    return this.articleService.update(+id, data, req.user.id);
+    return this.articleService.update(slug, data, req.user.id);
   }
 
-  @Delete(':id')
+  @Delete(':slug')
   async remove(
-    @Param('id', ArticleExitPipe) id: string,
+    @Param('slug') slug: string,
     @Res() res: Response,
     @Request() req,
   ) {
-    await this.articleService.remove(+id, req.user.id);
+    await this.articleService.remove(slug, req.user.id);
     return res.status(HttpStatus.OK).json({ message: 'delete sucess' });
   }
 

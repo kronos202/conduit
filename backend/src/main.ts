@@ -18,6 +18,7 @@ async function bootstrap() {
     }),
     bufferLogs: true,
     cors: true,
+    bodyParser: true,
   });
 
   const configService = app.get(ConfigService<AllConfigType>);

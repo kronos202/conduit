@@ -175,6 +175,24 @@ export class AuthService {
     };
   }
 
+  async validateUser(email: string, password: string) {
+    const user = await this.userService.findOneOrFailByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+    const isMatch = this.bcryptService.compare(password, user.password);
+    if (!isMatch) {
+      throw new UnprocessableEntityException({
+        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          message:
+            'Có lỗi xảy ra khi đăng nhập. Hãy kiểm tra lại tài khoản hoặc mật khẩu',
+        },
+      });
+    }
+    return user;
+  }
+
   async logout(data: Pick<JwtRefreshPayloadType, 'sessionId'>) {
     return await this.sessionService.deleteById(data.sessionId);
   }

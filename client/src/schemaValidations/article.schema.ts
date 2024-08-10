@@ -16,7 +16,7 @@ export const UpdateArticleBody = z
     title: z.string().min(2).max(50).optional(),
     description: z.string().min(2).max(50).optional(),
     content: z.string().min(2).max(50).optional(),
-    tag: z.string().optional(),
+    tags: z.array(z.string()).optional(),
   })
   .strict();
 
