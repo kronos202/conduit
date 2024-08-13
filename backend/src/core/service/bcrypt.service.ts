@@ -7,7 +7,7 @@ import { randomStringGenerator } from '@nestjs/common/utils/random-string-genera
 @Injectable()
 export class BcryptService implements HashingService {
   async hash(password: string): Promise<string> {
-    const salt = await genSalt();
+    const salt = await genSalt(10);
     return hash(password, salt);
   }
 

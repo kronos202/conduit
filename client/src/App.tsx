@@ -11,6 +11,8 @@ function App() {
 
   useEffect(() => {
     LocalStorageEventTarget.addEventListener("clearLS", reset);
+    console.log("reset");
+
     return () => {
       LocalStorageEventTarget.removeEventListener("clearLS", reset);
     };

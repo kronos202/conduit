@@ -14,6 +14,8 @@ import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
 import { BcryptService } from 'src/core/service/bcrypt.service';
 import { UploadModule } from 'src/upload/upload.module';
 import { LocalStrategy } from './strategy/local.strategy';
+import { MailService } from 'src/mail/mail.service';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { LocalStrategy } from './strategy/local.strategy';
     SessionService,
     JwtStrategy,
     BcryptService,
+    MailService,
+    MailerService,
     JwtRefreshStrategy,
     LocalStrategy,
   ],

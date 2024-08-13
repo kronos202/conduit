@@ -81,5 +81,6 @@ export default registerAs<AppConfig>('app', () => {
     database_password: process.env.DATABASE_PASSWORD,
     database_name: process.env.DATABASE_NAME,
     database_host: process.env.DATABASE_HOST,
+    workingDirectory: process.env.PWD || process.cwd(),
   };
 });

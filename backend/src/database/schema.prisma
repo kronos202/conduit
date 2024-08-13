@@ -18,8 +18,11 @@ model User {
   id       Int     @id @default(autoincrement()) 
   email    String  @unique
   username String
-  password String
+  password String?
   bio      String?
+  active Boolean @default(false)
+  provider String?
+  socialId String?
   avatar String? @default("https://api.realworld.io/images/smiley-cyrus.jpeg")
 
   followers        Follower[]        @relation("UserFollowers")
@@ -104,6 +107,5 @@ model Role {
   id   Int    @id @default(autoincrement())
   name String @unique
   
-
   users User[] 
 }

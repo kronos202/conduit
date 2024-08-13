@@ -12,6 +12,9 @@ import { ArticleModule } from './domain/articles/article.module';
 import { TagModule } from './domain/tags/tag.module';
 import { CommentModule } from './domain/comments/comment.module';
 import { FollowerModule } from './domain/followers/follower.module';
+import { MailModule } from './mail/mail.module';
+import { MailerModule } from './mailer/mailer.module';
+import { AuthGoogleModule } from './auth-google/auth-google.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { FollowerModule } from './domain/followers/follower.module';
     TagModule,
     CommentModule,
     FollowerModule,
+    MailModule,
+    MailerModule,
+    AuthGoogleModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

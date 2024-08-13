@@ -1,6 +1,7 @@
 import {
   HttpStatus,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -12,7 +13,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { UserService } from '../users/user.service';
 import { SessionService } from '../sessions/session.service';
-import { Role, Session, User } from '@prisma/client';
+import { Prisma, Role, Session, User } from '@prisma/client';
 import { RolesService } from '../roles/roles.service';
 import AllConfigType from 'src/config';
 import { PrismaService } from 'nestjs-prisma';
@@ -20,6 +21,11 @@ import { JwtRefreshPayloadType } from './strategy/types/jwt-refresh-payload.type
 import { LoginResponseDto } from './dto/login-response.dto';
 import { JwtPayloadType } from './strategy/types/jwt-payload.type';
 import { BcryptService } from 'src/core/service/bcrypt.service';
+import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
+import { MailService } from 'src/mail/mail.service';
+import { SocialInterface } from 'src/utils/interfaces/social.interface';
+import { NullableType } from 'src/utils/types/nullable';
+import { RoleEnum } from 'src/core/enums/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +37,7 @@ export class AuthService {
     private configService: ConfigService<AllConfigType>,
     protected databaseService: PrismaService,
     private bcryptService: BcryptService,
+    private mailService: MailService,
   ) {}
 
   async signIn(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
@@ -75,6 +82,151 @@ export class AuthService {
     };
   }
 
+  async register(dto: AuthRegisterLoginDto) {
+    const user = await this.userService.createWithHash({
+      ...dto,
+      email: dto.email,
+    });
+
+    const hash = await this.jwtService.signAsync(
+      {
+        confirmEmailUserId: user.id,
+      },
+      {
+        secret: this.configService.getOrThrow('auth.confirmEmailSecret', {
+          infer: true,
+        }),
+        expiresIn: this.configService.getOrThrow('auth.confirmEmailExpires', {
+          infer: true,
+        }),
+      },
+    );
+
+    return await this.mailService.userSignUp({
+      to: dto.email,
+      data: {
+        hash,
+      },
+    });
+  }
+
+  async confirmEmail(hash: string): Promise<void> {
+    let userId: User['id'];
+
+    try {
+      const jwtData = await this.jwtService.verifyAsync<{
+        confirmEmailUserId: User['id'];
+      }>(hash, {
+        secret: this.configService.getOrThrow('auth.confirmEmailSecret', {
+          infer: true,
+        }),
+      });
+
+      // console.log(jwtData);
+
+      userId = jwtData.confirmEmailUserId;
+    } catch {
+      throw new UnprocessableEntityException({
+        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          hash: `invalidHash`,
+        },
+      });
+    }
+
+    const user = await this.userService.findById(userId);
+
+    if (!user || user?.active !== false) {
+      throw new NotFoundException({
+        status: HttpStatus.NOT_FOUND,
+        error: `notFound`,
+      });
+    }
+
+    user.active = true;
+
+    await this.userService.update(user.id, user);
+  }
+
+  async validateSocialLogin(
+    authProvider: string,
+    socialData: SocialInterface,
+  ): Promise<LoginResponseDto> {
+    let user: NullableType<User> = null;
+    const socialEmail = socialData.email?.toLowerCase();
+    let userByEmail: NullableType<User> = null;
+
+    if (socialEmail) {
+      userByEmail = await this.userService.findOneOrFailByEmail(socialEmail);
+    }
+
+    if (socialData.id) {
+      user = await this.userService.findBySocialIdAndProvider({
+        socialId: socialData.id,
+        provider: authProvider,
+      });
+    }
+
+    if (user) {
+      if (socialEmail && !userByEmail) {
+        user.email = socialEmail;
+      }
+      await this.userService.update(user.id, user);
+    } else if (userByEmail) {
+      user = userByEmail;
+    } else if (socialData.id) {
+      const createData: Prisma.UserCreateInput = {
+        role: {
+          connect: {
+            id: RoleEnum.user,
+          },
+        },
+        email: socialEmail ?? '',
+        username: socialData.firstName + socialData.lastName ?? '',
+        provider: authProvider,
+      };
+
+      user = await this.userService.createWithHash(createData);
+
+      user = await this.userService.findById(user.id);
+    }
+
+    if (!user) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          user: 'userNotFound',
+        },
+      });
+    }
+
+    const hash = await this.bcryptService.genSha256();
+
+    const session = await this.sessionService.create({
+      userId: user.id,
+      hash,
+    });
+
+    const roles = await this.roleService.getUserRoles(session.userId);
+
+    const {
+      token: jwtToken,
+      refreshToken,
+      tokenExpires,
+    } = await this.getTokensData({
+      id: user.id,
+      role: roles.role.map((name) => name.id).toString(),
+      sessionId: session.id,
+      hash,
+    });
+
+    return {
+      refreshToken,
+      token: jwtToken,
+      tokenExpires,
+      user,
+    };
+  }
   async refreshToken(
     data: Pick<JwtRefreshPayloadType, 'sessionId' | 'hash'>,
   ): Promise<Omit<LoginResponseDto, 'user'>> {

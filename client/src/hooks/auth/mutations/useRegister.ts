@@ -16,7 +16,7 @@ export const useRegister = () => {
   } = useMutation({
     mutationFn: (data: RegisterBodyType) => authApi.registerAccount(data),
     onSuccess: () => {
-      toast.success("Đăng ký thành công");
+      toast.success("Đăng ký thành công hãy kiểm tra email");
     },
     onError(error) {
       if (isAxiosUnprocessableEntityError<ErrorResponse>(error)) {

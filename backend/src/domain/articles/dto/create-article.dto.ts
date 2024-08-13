@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateArticleDto {
   @IsNotEmpty()
@@ -17,4 +23,12 @@ export class CreateArticleDto {
   @MinLength(8)
   @IsString()
   content: string;
+
+  @IsNotEmpty()
+  @IsString()
+  slug: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  tags: string[];
 }

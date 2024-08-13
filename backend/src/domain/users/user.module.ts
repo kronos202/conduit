@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { RolesService } from '../roles/roles.service';
-import { RoleModule } from '../roles/roles.module';
 import { BcryptService } from 'src/core/service/bcrypt.service';
 import { UploadModule } from 'src/upload/upload.module';
+import { MailService } from 'src/mail/mail.service';
+import { MailModule } from 'src/mail/mail.module';
+import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
-  imports: [RoleModule, UploadModule],
+  imports: [UploadModule, MailModule, MailerModule],
   controllers: [UserController],
-  providers: [UserService, RolesService, BcryptService],
+  providers: [UserService, BcryptService, MailService],
   exports: [UserService],
 })
 export class UserModule {}

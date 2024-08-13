@@ -17,9 +17,9 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(8)
-  password: string;
+  password?: string;
 
   @IsNotEmpty()
   @MinLength(8)
@@ -30,4 +30,13 @@ export class CreateUserDto {
 
   @IsOptional()
   avatar?: string;
+
+  @IsOptional()
+  provider?: string;
+
+  @IsOptional()
+  socialId?: string | null;
+
+  @IsOptional()
+  hash?: string | null;
 }

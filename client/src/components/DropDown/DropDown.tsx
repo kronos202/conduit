@@ -10,8 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLogout } from "@/hooks/auth/mutations/useLogout";
 
 export default function DropdownMenuAuth() {
+  const { logout } = useLogout();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -33,7 +36,7 @@ export default function DropdownMenuAuth() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => logout()}>
           <LogOut className="w-4 h-4 mr-2" />
           <span>Log out</span>
         </DropdownMenuItem>
