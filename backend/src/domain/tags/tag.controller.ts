@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { TagService } from './tag.service';
-import { Public } from 'src/core/decorator/public.decorator';
+import { Public } from 'src/core/decorators/public.decorator';
 import { CacheKey } from '@nestjs/cache-manager';
 
 @Controller('tag')

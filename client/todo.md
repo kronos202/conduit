@@ -8,7 +8,10 @@
 9/8
 
 - edit + delete article (oke)
-- logout
+- logout (oke)
 - edit setting (oke)
 - local guard (ok)
 - custome lại usecontext thành hook
+
+- ko viết function quá 3 params updateComment
+- sài dto cho article module (oke)

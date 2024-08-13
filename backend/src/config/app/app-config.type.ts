@@ -1,6 +1,6 @@
 export type AppConfig = {
   nodeEnv: string;
-  fe_url: string;
+  fe_url?: string;
   app_name: string;
   app_port: number;
   api_Prefix: string;
@@ -9,4 +9,5 @@ export type AppConfig = {
   database_password: string;
   database_name: string;
   database_host: string;
+  workingDirectory: string;
 };

@@ -9,14 +9,17 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { GoogleLogin } from "@react-oauth/google";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { LoadingSpinner } from "@/components/spinner";
 import { useLogin } from "@/hooks/auth/mutations/useLogin";
+import { useLoginGoogle } from "@/hooks/auth/mutations/useLoginGoogle";
 
 const Login = () => {
   const { isPending, isSuccess, login } = useLogin();
+  const { loginGoogle } = useLoginGoogle();
 
   const navigate = useNavigate();
 
@@ -31,10 +34,10 @@ const Login = () => {
   function onSubmit(values: LoginBodyType) {
     login(values);
 
-    if (isSuccess) {
-      form.reset({ email: "", password: "" });
-      navigate("/");
-    }
+    // if (isSuccess) {
+    //   form.reset({ email: "", password: "" });
+    //   navigate("/");
+    // }
   }
   return (
     <div className="mx-auto w-[500px] bg-gray-100 p-5 rounded-md">
@@ -85,6 +88,13 @@ const Login = () => {
           </Button>
         </form>
       </Form>
+
+      <GoogleLogin
+        onSuccess={(data) =>
+          loginGoogle({ idToken: data.credential as string })
+        }
+        onError={() => console.log("error")}
+      />
     </div>
   );
 };

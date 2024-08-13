@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { RoleEnum } from './roles.enum';
+import { RoleEnum } from '../../core/enums/roles.enum';
 
 @Controller('roles')
 export class RolesController {

@@ -7,7 +7,7 @@ import { AppContext } from "@/context/app";
 import FavoriteFeed from "./FavoriteFeed";
 
 const Feed = () => {
-  const { tag, setTag } = useContext(AppContext);
+  const { tag, setTag, isAuthenticated } = useContext(AppContext);
   const [activeTab, setActiveTab] = useState<string>("global");
 
   useEffect(() => {
@@ -26,9 +26,13 @@ const Feed = () => {
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
       <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="global">Global Feed</TabsTrigger>
-        <TabsTrigger value="own">Your Feed</TabsTrigger>
-        <TabsTrigger value="favorite">Favorite Feed</TabsTrigger>
-        <TabsTrigger value="tag">Tag #{tag}</TabsTrigger>
+        {isAuthenticated && (
+          <>
+            <TabsTrigger value="own">Your Feed</TabsTrigger>
+            <TabsTrigger value="favorite">Favorite Feed</TabsTrigger>
+            <TabsTrigger value="tag">Tag #{tag}</TabsTrigger>
+          </>
+        )}
       </TabsList>
       <GlobalFeed />
       <MyFeed />

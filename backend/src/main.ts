@@ -26,6 +26,10 @@ async function bootstrap() {
   const apiPrefix = configService.getOrThrow('app.api_Prefix', { infer: true });
   const appName = configService.getOrThrow('app.app_name', { infer: true });
 
+  console.log(
+    configService.getOrThrow('app.workingDirectory', { infer: true }),
+  );
+
   app.setGlobalPrefix(apiPrefix, {
     exclude: ['/'],
   });

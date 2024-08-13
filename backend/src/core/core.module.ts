@@ -16,13 +16,15 @@ import authConfig from 'src/config/auth/auth.config';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import mailConfig from 'src/config/mail/mail.config';
+import googleConfig from 'src/config/google/google.config';
 
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [authConfig, appConfig],
+      load: [authConfig, appConfig, mailConfig, googleConfig],
       envFilePath: ['.env'],
     }),
     PrismaModule.forRoot({

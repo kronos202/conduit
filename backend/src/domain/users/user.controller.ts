@@ -6,10 +6,12 @@ import {
   Param,
   UseInterceptors,
   Req,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
+import { Public } from 'src/core/decorators/public.decorator';
 
 @Controller('users')
 @UseInterceptors(SerializeInterceptor)
@@ -19,6 +21,11 @@ export class UserController {
   @Get('getAll')
   findAll() {
     return this.userService.findAll();
+  }
+  @Post()
+  @Public()
+  test() {
+    return this.userService.testsendmail();
   }
 
   @Get(':id')

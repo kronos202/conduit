@@ -33,6 +33,9 @@ export const useToggleFavorite = () => {
         toast.success("Hủy thích thành công");
       }
     },
+    onError: () => {
+      toast.error("Hãy đăng nhập");
+    },
   });
 
   return { favorite, isPending };

@@ -2,19 +2,19 @@ import { lazy, Suspense, useContext } from "react";
 import { Navigate, Outlet, useRoutes } from "react-router-dom";
 import path from "@/constants/path";
 import AuthLayout from "@/layouts/AuthLayout";
-import Home from "@/pages/Home";
 import MainLayout from "@/layouts/MainLayout";
 import SkeletonRegister from "@/components/SkeletonRegister";
 import SkeletonLogin from "@/components/SkeletonLogin";
-import CreateArticle from "@/pages/CreateArticle";
 import { AppContext } from "@/context/app";
-import ArticleDetail from "@/pages/ArticleDetail";
-import Setting from "@/pages/Setting";
-import Profile from "@/pages/Profile";
 
 const HomePage = lazy(() => import("@/pages/Home"));
 const RegisterPage = lazy(() => import("@/pages/Register"));
+const ConfirmPage = lazy(() => import("@/pages/ConfirmEmail"));
 const LoginPage = lazy(() => import("@/pages/Login"));
+const CreateArticlePage = lazy(() => import("@/pages/CreateArticle"));
+const ArticleDetailPage = lazy(() => import("@/pages/ArticleDetail"));
+const SettingPage = lazy(() => import("@/pages/Setting"));
+const ProfilePage = lazy(() => import("@/pages/Profile"));
 
 export function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -53,6 +53,16 @@ const useRouteElements = () => {
             </AuthLayout>
           ),
         },
+        {
+          path: path.confirmEmail,
+          element: (
+            <AuthLayout>
+              <Suspense fallback={<SkeletonRegister />}>
+                <ConfirmPage />
+              </Suspense>
+            </AuthLayout>
+          ),
+        },
       ],
     },
     {
@@ -61,7 +71,7 @@ const useRouteElements = () => {
       element: (
         <MainLayout>
           <Suspense>
-            <Home />
+            <HomePage />
           </Suspense>
         </MainLayout>
       ),
@@ -75,7 +85,7 @@ const useRouteElements = () => {
           element: (
             <MainLayout>
               <Suspense fallback={<SkeletonRegister />}>
-                <CreateArticle />
+                <CreateArticlePage />
               </Suspense>
             </MainLayout>
           ),
@@ -85,7 +95,7 @@ const useRouteElements = () => {
           element: (
             <MainLayout>
               <Suspense fallback={<SkeletonRegister />}>
-                <ArticleDetail />
+                <ArticleDetailPage />
               </Suspense>
             </MainLayout>
           ),
@@ -95,7 +105,7 @@ const useRouteElements = () => {
           element: (
             <MainLayout>
               <Suspense fallback={<SkeletonRegister />}>
-                <Setting />
+                <SettingPage />
               </Suspense>
             </MainLayout>
           ),
@@ -105,7 +115,7 @@ const useRouteElements = () => {
           element: (
             <MainLayout>
               <Suspense fallback={<SkeletonRegister />}>
-                <Profile />
+                <ProfilePage />
               </Suspense>
             </MainLayout>
           ),

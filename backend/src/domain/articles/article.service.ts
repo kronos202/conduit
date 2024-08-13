@@ -18,10 +18,7 @@ export class ArticleService extends BaseService<
     super(databaseService, 'Article');
   }
 
-  async createArticle(
-    data: Prisma.ArticleCreateInput & { tags: string[] },
-    userId: number,
-  ) {
+  async createArticle(data: CreateArticleDto, userId: number) {
     const genslug = slugify(data.title);
     const uniqueSlug = await this.generateUniqueSlug(genslug);
 
@@ -47,11 +44,7 @@ export class ArticleService extends BaseService<
     });
   }
 
-  async update(
-    slug: string,
-    data: Prisma.ArticleUpdateInput & { tags: string[] },
-    userId: number,
-  ) {
+  async update(slug: string, data: UpdateArticleDto, userId: number) {
     const { tags, content, description, title } = data; //as
     let slugUpdate: string;
     if (title) {

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
@@ -8,7 +8,8 @@ export class AuthRegisterLoginDto {
   email: string;
 
   @MinLength(6)
-  password: string;
+  @IsOptional()
+  password?: string;
 
   @IsNotEmpty()
   username: string;

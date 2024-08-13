@@ -6,8 +6,15 @@ export const LoginBody = z
     password: z.string().min(8),
   })
   .strict();
-
 export type LoginBodyType = z.TypeOf<typeof LoginBody>;
+
+export const LoginGoogleBody = z
+  .object({
+    idToken: z.string(),
+  })
+  .strict();
+
+export type LoginGoogleBodyType = z.TypeOf<typeof LoginGoogleBody>;
 
 export const RegisterBody = z
   .object({

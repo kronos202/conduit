@@ -6,7 +6,6 @@ import {
   Post,
   Request,
   Res,
-  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,20 +17,16 @@ import { NullableType } from 'src/utils/types/nullable';
 import { User } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-import { Public } from 'src/core/decorator/public.decorator';
+import { Public } from 'src/core/decorators/public.decorator';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { UserService } from '../users/user.service';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { LocalAuthGuard } from 'src/core/guard/local.guard';
+import { AuthConfirmEmailDto } from './dto/auth-confirm-email.dto';
 
 @Controller('auth')
 @UseInterceptors(SerializeInterceptor)
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private userService: UserService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Post('login')
   @Public()
@@ -41,13 +36,18 @@ export class AuthController {
   }
 
   @Post('register')
-  @UseInterceptors(FileInterceptor('avatar'))
   @Public()
-  async register(
-    @Body() createUserDto: CreateUserDto,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    return await this.userService.createWithHash(createUserDto, file);
+  async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+    await this.authService.register(createUserDto);
+    return res.status(HttpStatus.OK).json({
+      message: 'Đăng kí thành công hãy kiểm tra email',
+    });
+  }
+
+  @Post('email/confirm')
+  @Public()
+  async confirmEmail(@Body() authConfirmEmailDto: AuthConfirmEmailDto) {
+    return await this.authService.confirmEmail(authConfirmEmailDto.hash);
   }
 
   @Post('refresh')
@@ -66,6 +66,8 @@ export class AuthController {
 
   @Post('logout')
   public async logout(@Request() request, @Res() res: Response) {
+    console.log(request.user.sessionId);
+
     await this.authService.logout({
       sessionId: request.user.sessionId,
     });

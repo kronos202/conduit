@@ -8,7 +8,7 @@ import {
   setAccessTokenToLS,
   setProfileToLS,
 } from "./auth";
-import { URL_LOGIN, URL_LOGOUT } from "@/apis/auth.api";
+import { URL_LOGIN, URL_LOGINGOOGLE, URL_LOGOUT } from "@/apis/auth.api";
 
 class Http {
   private static instance: AxiosInstance | null = null;
@@ -40,7 +40,7 @@ class Http {
       Http.instance.interceptors.response.use(
         (response) => {
           const { url } = response.config;
-          if (url === URL_LOGIN) {
+          if (url === URL_LOGIN || url === URL_LOGINGOOGLE) {
             const data = response.data;
             Http.accessToken = data.data.token;
             setAccessTokenToLS(Http.accessToken as string);

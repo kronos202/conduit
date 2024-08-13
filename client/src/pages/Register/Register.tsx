@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   RegisterBody,
   RegisterBodyType,
@@ -20,7 +20,6 @@ import { LoadingSpinner } from "@/components/spinner";
 
 const Register = () => {
   const { isPending, isSuccess, register } = useRegister();
-  const navigate = useNavigate();
 
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
@@ -36,7 +35,6 @@ const Register = () => {
 
     if (isSuccess) {
       form.reset({ email: "", password: "", username: "" });
-      navigate("/login");
     }
   }
   return (

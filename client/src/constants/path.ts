@@ -8,6 +8,7 @@ const path = {
   login: "/login",
   register: "/register",
   logout: "/logout",
+  confirmEmail: "/confirm-email/",
 } as const;
 
 export default path;

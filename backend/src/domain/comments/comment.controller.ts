@@ -15,7 +15,7 @@ import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Response } from 'express';
-import { Public } from 'src/core/decorator/public.decorator';
+import { Public } from 'src/core/decorators/public.decorator';
 
 @Controller('comment')
 export class CommentController {

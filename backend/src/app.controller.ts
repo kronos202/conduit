@@ -12,7 +12,7 @@ import { AppService } from './app.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload/upload.service';
 import { Response } from 'express';
-import { Public } from './core/decorator/public.decorator';
+import { Public } from './core/decorators/public.decorator';
 
 @Controller('images')
 export class AppController {
