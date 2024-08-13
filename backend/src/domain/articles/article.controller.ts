@@ -21,6 +21,7 @@ import { SerializeInterceptor } from 'src/core/interceptors/serialize.intercepto
 import { ArticleExitPipe } from 'src/core/pipe/article/articleExist.pipe';
 import { getArrayTagFromString } from 'src/utils/transformers/stringToArray';
 import { CacheKey } from '@nestjs/cache-manager';
+import { UpdateArticleDto } from './dto/update-article.dto';
 
 @Controller('article')
 @UseInterceptors(SerializeInterceptor)
@@ -80,7 +81,7 @@ export class ArticleController {
   @Patch(':slug')
   async update(
     @Param('slug') slug: string,
-    @Body() data: Prisma.ArticleUpdateInput & { tags: string[] },
+    @Body() data: UpdateArticleDto,
     @Request() req,
   ) {
     return this.articleService.update(slug, data, req.user.id);

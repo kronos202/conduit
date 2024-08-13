@@ -7,16 +7,18 @@ import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 import AllConfigType from 'src/config';
 import { AuthGoogleLoginDto } from './dto/auth-google-login.dto';
-import { SocialInterface } from 'src/utils/interfaces/social.interface';
+import { SocialInterface } from 'src/auth-google/interfaces/social.interface';
+import { getConfig } from 'src/utils/helpers/getConfig';
 
 @Injectable()
 export class AuthGoogleService {
   private google: OAuth2Client;
+  private config = getConfig(this.configService);
 
   constructor(private configService: ConfigService<AllConfigType>) {
     this.google = new OAuth2Client(
-      configService.get('google.clientId', { infer: true }),
-      configService.get('google.clientSecret', { infer: true }),
+      this.config.google.clientId,
+      this.config.google.clientSecret,
     );
   }
 
@@ -25,9 +27,7 @@ export class AuthGoogleService {
   ): Promise<SocialInterface> {
     const ticket = await this.google.verifyIdToken({
       idToken: loginDto.idToken,
-      audience: [
-        this.configService.getOrThrow('google.clientId', { infer: true }),
-      ],
+      audience: [this.config.google.clientId],
     });
 
     const data = ticket.getPayload();

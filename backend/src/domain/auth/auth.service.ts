@@ -23,12 +23,15 @@ import { JwtPayloadType } from './strategy/types/jwt-payload.type';
 import { BcryptService } from 'src/core/service/bcrypt.service';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { MailService } from 'src/mail/mail.service';
-import { SocialInterface } from 'src/utils/interfaces/social.interface';
+import { SocialInterface } from 'src/auth-google/interfaces/social.interface';
 import { NullableType } from 'src/utils/types/nullable';
 import { RoleEnum } from 'src/core/enums/roles.enum';
+import { getConfig } from 'src/utils/helpers/getConfig';
 
 @Injectable()
 export class AuthService {
+  private config = getConfig(this.configService);
+
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -93,12 +96,8 @@ export class AuthService {
         confirmEmailUserId: user.id,
       },
       {
-        secret: this.configService.getOrThrow('auth.confirmEmailSecret', {
-          infer: true,
-        }),
-        expiresIn: this.configService.getOrThrow('auth.confirmEmailExpires', {
-          infer: true,
-        }),
+        secret: this.config.auth.confirmEmailSecret,
+        expiresIn: this.config.auth.confirmEmailExpires,
       },
     );
 
@@ -117,12 +116,8 @@ export class AuthService {
       const jwtData = await this.jwtService.verifyAsync<{
         confirmEmailUserId: User['id'];
       }>(hash, {
-        secret: this.configService.getOrThrow('auth.confirmEmailSecret', {
-          infer: true,
-        }),
+        secret: this.config.auth.confirmEmailSecret,
       });
-
-      // console.log(jwtData);
 
       userId = jwtData.confirmEmailUserId;
     } catch {
@@ -284,9 +279,7 @@ export class AuthService {
     sessionId: Session['id'];
     hash: Session['hash'];
   }) {
-    const tokenExpiresIn = this.configService.getOrThrow('auth.expires_time', {
-      infer: true,
-    });
+    const tokenExpiresIn = this.config.auth.expires_time;
 
     const tokenExpires = Date.now() + ms(tokenExpiresIn);
 
@@ -298,9 +291,7 @@ export class AuthService {
           sessionId: data.sessionId,
         },
         {
-          secret: this.configService.getOrThrow('auth.secret_key', {
-            infer: true,
-          }),
+          secret: this.config.auth.secret_key,
           expiresIn: tokenExpiresIn,
         },
       ),
@@ -310,12 +301,8 @@ export class AuthService {
           hash: data.hash,
         },
         {
-          secret: this.configService.getOrThrow('auth.refreshSecret', {
-            infer: true,
-          }),
-          expiresIn: this.configService.getOrThrow('auth.refreshExpires', {
-            infer: true,
-          }),
+          secret: this.config.auth.refreshSecret,
+          expiresIn: this.config.auth.refreshExpires,
         },
       ),
     ]);

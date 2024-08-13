@@ -10,6 +10,7 @@ import { WinstonModule } from 'nest-winston';
 import AllConfigType from './config';
 import { PrismaExceptionFilter } from './core/filters/prisma-exeption.filter';
 import { useContainer } from 'class-validator';
+import { getConfig } from './utils/helpers/getConfig';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -22,15 +23,9 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService<AllConfigType>);
-  const appPort = configService.getOrThrow('app.app_port', { infer: true });
-  const apiPrefix = configService.getOrThrow('app.api_Prefix', { infer: true });
-  const appName = configService.getOrThrow('app.app_name', { infer: true });
+  const { app: appConfig } = getConfig(configService);
 
-  console.log(
-    configService.getOrThrow('app.workingDirectory', { infer: true }),
-  );
-
-  app.setGlobalPrefix(apiPrefix, {
+  app.setGlobalPrefix(appConfig.apiPrefix, {
     exclude: ['/'],
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -39,10 +34,10 @@ async function bootstrap() {
   app.use(helmet());
 
   console.table({
-    port: appPort,
-    name: appName,
-    apiPrefix: apiPrefix,
+    port: appConfig.appPort,
+    name: appConfig.appName,
+    apiPrefix: appConfig.apiPrefix,
   }),
-    await app.listen(appPort);
+    await app.listen(appConfig.appPort);
 }
 bootstrap();

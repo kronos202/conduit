@@ -28,6 +28,7 @@ export class BaseService<
       where: { id },
     });
   }
+
   async findOrFailById(id: number) {
     const result = await this.findById(id);
     if (!result) {

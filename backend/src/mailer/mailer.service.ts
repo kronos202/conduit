@@ -4,23 +4,25 @@ import Handlebars from 'handlebars';
 import nodemailer from 'nodemailer';
 import AllConfigType from 'src/config';
 import fs from 'node:fs/promises';
+import { getConfig } from 'src/utils/helpers/getConfig';
 
 @Injectable()
 export class MailerService {
   private readonly transporter: nodemailer.Transporter;
+  private config = getConfig(this.configService);
 
   constructor(private readonly configService: ConfigService<AllConfigType>) {
     this.transporter = nodemailer.createTransport({
-      host: configService.get('mail.host', { infer: true }),
-      port: configService.get('mail.mail_port', { infer: true }),
+      host: this.config.mail.host,
+      port: this.config.mail.mail_port,
       //   secure options:
       //   ignoreTLS: configService.get('mail.ignoreTLS', { infer: true }),
       // secure: configService.get('mail.secure', { infer: true }),
       secure: true,
       //   requireTLS: configService.get('mail.requireTLS', { infer: true }),
       auth: {
-        user: configService.get('mail.user', { infer: true }),
-        pass: configService.get('mail.password', { infer: true }),
+        user: this.config.mail.user,
+        pass: this.config.mail.password,
       },
       service: 'gmail',
     });
@@ -41,17 +43,11 @@ export class MailerService {
       })(context);
     }
 
-    console.log(this.configService.get('mail.password', { infer: true }));
-
     await this.transporter.sendMail({
       ...mailOptions,
       from: mailOptions.from
         ? mailOptions.from
-        : `"${this.configService.get('mail.defaultName', {
-            infer: true,
-          })}" <${this.configService.get('mail.default_email', {
-            infer: true,
-          })}>`,
+        : `"${this.config.mail.defaultName}" <${this.config.mail.default_email}>`,
       html: mailOptions.html ? mailOptions.html : html,
     });
   }
