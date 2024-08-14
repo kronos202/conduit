@@ -8,13 +8,9 @@ import {
 import { Label } from "@/components/ui/label";
 import EditProfile from "./EditSetting";
 import { useMe } from "@/hooks/auth/queries/useMe";
-import { useContext } from "react";
-import { AppContext } from "@/context/app";
 
 const Setting = () => {
-  // const { profile } = useContext(AppContext);
   const { data } = useMe();
-  console.log(data);
 
   return (
     <div className="flex items-center justify-center">

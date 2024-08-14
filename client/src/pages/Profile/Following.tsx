@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { useGetFollowing } from "@/hooks/follows/queries/useGetFollowing";
+import { Follow } from "@/types/follow.type";
 import { Link, useParams } from "react-router-dom";
 
 const Following = () => {
@@ -11,7 +12,7 @@ const Following = () => {
 
   return (
     <TabsContent value="following" className="grid w-full grid-cols-3">
-      {following?.map((item) => (
+      {following?.map((item: Follow) => (
         <Link to={`/profile/${item.followerId}`}>
           <Card>
             <CardContent className="flex items-center justify-center gap-4 text-black">

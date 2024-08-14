@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { useUnfollowUser } from "@/hooks/follows/mutations/useUnfollowUser";
 import { useMe } from "@/hooks/auth/queries/useMe";
 import { useGetById } from "@/hooks/auth/queries/useGetById";
+import { Follow } from "@/types/follow.type";
 
 const BannerProfile = () => {
   const { follow } = useFollowUser();
@@ -19,7 +20,7 @@ const BannerProfile = () => {
   const isNotMyProfile = Number(profile?.id) !== Number(params.id);
   const isFollow = () =>
     data?.following?.some(
-      (follower) => follower?.followerId === Number(params.id)
+      (follower: Follow) => follower?.followerId === Number(params.id)
     );
 
   return (

@@ -29,10 +29,23 @@ import googleConfig from 'src/config/google/google.config';
     }),
     PrismaModule.forRoot({
       isGlobal: true,
+      prismaServiceOptions: {
+        prismaOptions: {
+          datasources: {
+            db: {
+              url: `postgresql://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}?schema=public`,
+            },
+          },
+        },
+      },
     }),
-    CacheModule.register({
-      store: redisStore,
-      ttl: 60 * 1000,
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        store: await redisStore({
+          url: 'redis://default:fAJNbXrRBlBndNWDxuVnXimBzBsIdRUo@monorail.proxy.rlwy.net:45737',
+          ttl: 60 * 1000,
+        }),
+      }),
     }),
   ],
   providers: [

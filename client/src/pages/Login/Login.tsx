@@ -11,17 +11,15 @@ import {
 } from "@/components/ui/form";
 import { GoogleLogin } from "@react-oauth/google";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { LoadingSpinner } from "@/components/spinner";
 import { useLogin } from "@/hooks/auth/mutations/useLogin";
 import { useLoginGoogle } from "@/hooks/auth/mutations/useLoginGoogle";
 
 const Login = () => {
-  const { isPending, isSuccess, login } = useLogin();
+  const { isPending, login } = useLogin();
   const { loginGoogle } = useLoginGoogle();
-
-  const navigate = useNavigate();
 
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),

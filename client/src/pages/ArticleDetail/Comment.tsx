@@ -12,6 +12,7 @@ import { formattedDate } from "@/lib/utils";
 import { useDeleteComment } from "@/hooks/comments/mutations/useDeleteComment";
 import { EditComment } from "./EditComment";
 import { AppContext } from "@/context/app";
+import { Comments } from "@/types/comment.type";
 
 const Comment = () => {
   const params = useParams();
@@ -86,7 +87,7 @@ const Comment = () => {
         </div>
       </div>
       <Separator className="my-4" />
-      {data?.map((item) => (
+      {data?.map((item: Comments) => (
         <div className="flex justify-center w-full my-4">
           <div className="w-[50%]">
             <div className="w-full min-h-14 border-[4px] rounded-b-none flex items-center justify-center">

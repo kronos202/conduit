@@ -38,6 +38,8 @@ export class AuthController {
   @Post('register')
   @Public()
   async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+    console.log(createUserDto);
+
     await this.authService.register(createUserDto);
     return res.status(HttpStatus.OK).json({
       message: 'Đăng kí thành công hãy kiểm tra email',

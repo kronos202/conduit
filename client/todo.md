@@ -14,8 +14,10 @@
 - custome lại usecontext thành hook
 
 - ko viết function quá 3 params updateComment
-<<<<<<< HEAD
 - sài dto cho article module (okelaa)
-=======
-- sài dto cho article module (okela)
->>>>>>> main
+
+- note
+
+- favoriteCounts, name tag, username : index
+- resend + react-email để tạo template gửi mail đẹp hơn
+- tạo service để lấy config env thay vì .

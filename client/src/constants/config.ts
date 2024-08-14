@@ -1,5 +1,5 @@
 const config = {
-  baseUrl: "http://localhost:3000/api/",
+  baseUrl: "https://backendconduit.up.railway.app/api/",
 };
 
 export default config;
