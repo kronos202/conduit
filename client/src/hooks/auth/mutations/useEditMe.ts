@@ -1,4 +1,5 @@
 import authApi from "@/apis/auth.api";
+import { queryKeys } from "@/constants/queryKey";
 import { AppContext } from "@/context/app";
 import { setProfileToLS } from "@/lib/auth";
 import { EditProfileBodyType } from "@/schemaValidations/auth.schema";
@@ -14,7 +15,7 @@ export const useEditMe = () => {
   const { mutate: edit, isSuccess } = useMutation({
     mutationFn: (body: EditProfileBodyType) => authApi.editMe(body),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["me"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.me() });
       toast.success("Edit thành công");
       console.log(data.data.data);
 

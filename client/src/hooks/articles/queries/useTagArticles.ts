@@ -1,10 +1,11 @@
 import articleApi from "@/apis/article.api";
+import { queryKeys } from "@/constants/queryKey";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const useTagArticles = (tag: string) => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["get-all-tag-articles", tag],
+      queryKey: queryKeys.getAllTagArticles(tag),
       queryFn: () => articleApi.getTagArticles(tag),
       initialPageParam: 1,
       getNextPageParam: (lastPage, _, lastPageParam, allPageParams) => {

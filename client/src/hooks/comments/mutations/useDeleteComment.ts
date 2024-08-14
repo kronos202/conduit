@@ -1,4 +1,5 @@
 import commentApi from "@/apis/comment.api";
+import { queryKeys } from "@/constants/queryKey";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
@@ -8,7 +9,7 @@ export const useDeleteComment = (slug: string) => {
     mutationFn: (commentId: number) =>
       commentApi.deleteComment(slug, commentId),
     onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["all-comments"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.allComments() });
       toast.success("Xóa thành công comment");
     },
     onError() {

@@ -1,10 +1,11 @@
 import articleApi from "@/apis/article.api";
+import { queryKeys } from "@/constants/queryKey";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const useFavoriteArticles = () => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["get-all-favorite-articles"],
+      queryKey: queryKeys.getAllFavoriteArticles(),
       queryFn: () => articleApi.getFavoriteArticles(),
       initialPageParam: 1,
       getNextPageParam: (lastPage, _, lastPageParam, allPageParams) => {

@@ -1,4 +1,5 @@
 import articleApi from "@/apis/article.api";
+import { queryKeys } from "@/constants/queryKey";
 import { AppContext } from "@/context/app";
 import { User } from "@/types/user.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,10 +13,10 @@ export const useToggleFavorite = () => {
   const { mutate: favorite, isPending } = useMutation({
     mutationFn: (id: number) => articleApi.postToggleFavorite(id),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["get-all-articles"] });
-      queryClient.invalidateQueries({ queryKey: ["get-all-my-articles"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.getAllArticles() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.getAllMyArticles() });
       queryClient.invalidateQueries({
-        queryKey: ["get-all-favorite-articles"],
+        queryKey: queryKeys.getAllFavoriteArticles(),
       });
 
       // Handle tag-specific query invalidation
