@@ -18,6 +18,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import mailConfig from 'src/config/mail/mail.config';
 import googleConfig from 'src/config/google/google.config';
+import { PrismaConfigService } from './service/prisma-config.service';
 
 @Global()
 @Module({
@@ -27,17 +28,9 @@ import googleConfig from 'src/config/google/google.config';
       load: [authConfig, appConfig, mailConfig, googleConfig],
       envFilePath: ['.env'],
     }),
-    PrismaModule.forRoot({
+    PrismaModule.forRootAsync({
       isGlobal: true,
-      prismaServiceOptions: {
-        prismaOptions: {
-          datasources: {
-            db: {
-              url: `postgresql://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}?schema=public`,
-            },
-          },
-        },
-      },
+      useClass: PrismaConfigService,
     }),
     CacheModule.registerAsync({
       useFactory: async () => ({
