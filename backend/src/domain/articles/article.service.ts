@@ -60,7 +60,7 @@ export class ArticleService extends BaseService<
     }
 
     return this.databaseService.article.update({
-      where: { slug, authorId: userId },
+      where: { slug, authorId: userId, deletedAt: null },
       data: {
         title,
         description,
@@ -78,18 +78,22 @@ export class ArticleService extends BaseService<
   }
 
   async findAll() {
+    const where: Prisma.ArticleWhereInput = {
+      deletedAt: null,
+    };
     const include: Prisma.ArticleInclude = {
       author: true,
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include });
+    return await this.findWithPagination({ limit: 3, include, where });
   }
   async findMyArticles(userId: number) {
     const where: Prisma.ArticleWhereInput = {
       authorId: {
         equals: userId,
       },
+      deletedAt: null,
     };
     const include: Prisma.ArticleInclude = {
       author: true,
@@ -104,6 +108,7 @@ export class ArticleService extends BaseService<
       authorId: {
         equals: userId,
       },
+      deletedAt: null,
     };
     const include: Prisma.ArticleInclude = {
       author: true,
@@ -115,6 +120,7 @@ export class ArticleService extends BaseService<
 
   async findAllFavorite(userId: number) {
     const whereInput: Prisma.ArticleWhereInput = {
+      deletedAt: null,
       favoritedBy: { some: { id: userId } },
     };
     const inCludeInput: Prisma.ArticleInclude = {
@@ -135,6 +141,7 @@ export class ArticleService extends BaseService<
   async findBySlug(slug: string) {
     return await this.databaseService.article.findUnique({
       where: {
+        deletedAt: null,
         slug,
       },
       include: {
@@ -153,6 +160,7 @@ export class ArticleService extends BaseService<
           },
         },
       },
+      deletedAt: null,
     };
     const include: Prisma.ArticleInclude = {
       tags: true,
@@ -226,5 +234,28 @@ export class ArticleService extends BaseService<
     }
 
     return article;
+  }
+
+  async softDeleteArticle(slug: string, userId: number) {
+    return await this.databaseService.article.update({
+      where: {
+        authorId: userId,
+        slug,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  }
+  async restoreArticle(slug: string, userId: number) {
+    return await this.databaseService.article.update({
+      where: {
+        authorId: userId,
+        slug,
+      },
+      data: {
+        deletedAt: null,
+      },
+    });
   }
 }

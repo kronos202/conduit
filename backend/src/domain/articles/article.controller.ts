@@ -87,6 +87,15 @@ export class ArticleController {
     return this.articleService.update(slug, data, req.user.id);
   }
 
+  @Patch('softDelete/:slug')
+  async softDeleteArticle(@Param('slug') slug: string, @Request() req) {
+    return this.articleService.softDeleteArticle(slug, req.user.id);
+  }
+  @Patch('restoreArticle/:slug')
+  async restoreArticle(@Param('slug') slug: string, @Request() req) {
+    return this.articleService.restoreArticle(slug, req.user.id);
+  }
+
   @Delete(':slug')
   async remove(
     @Param('slug') slug: string,

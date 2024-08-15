@@ -104,11 +104,23 @@ export class UserService extends BaseService<
     });
   }
 
-  async testsendmail() {
-    return await this.mailService.userSignUp({
-      to: 'kronosss200202@gmail.com',
+  async softDeleteUser(userId: number) {
+    return await this.databaseService.user.update({
+      where: {
+        id: userId,
+      },
       data: {
-        hash: 'mascaramascaramascaramascaramascar',
+        deletedAt: new Date(),
+      },
+    });
+  }
+  async restoreUser(userId: number) {
+    return await this.databaseService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        deletedAt: null,
       },
     });
   }

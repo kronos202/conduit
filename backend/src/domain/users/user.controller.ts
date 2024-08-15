@@ -6,12 +6,10 @@ import {
   Param,
   UseInterceptors,
   Req,
-  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
-import { Public } from 'src/core/decorators/public.decorator';
 
 @Controller('users')
 @UseInterceptors(SerializeInterceptor)
@@ -22,10 +20,13 @@ export class UserController {
   findAll() {
     return this.userService.findAll();
   }
-  @Post()
-  @Public()
-  test() {
-    return this.userService.testsendmail();
+  @Patch('softDelete')
+  softDeleteUser(@Req() req) {
+    return this.userService.softDeleteUser(req.user.id);
+  }
+  @Patch('restore')
+  restoreUsser(@Req() req) {
+    return this.userService.restoreUser(req.user.id);
   }
 
   @Get(':id')
@@ -33,7 +34,7 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('')
   update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(req.user.id, updateUserDto);
   }
