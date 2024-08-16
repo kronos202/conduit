@@ -44,6 +44,8 @@ export class AuthService {
   ) {}
 
   async signIn(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
+    console.log(loginDto);
+
     const user = await this.userService.findOneOrFailByEmail(loginDto.email);
 
     const isValidPassword = await this.bcryptService.compare(
@@ -129,7 +131,7 @@ export class AuthService {
       });
     }
 
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findById({ id: userId });
 
     if (!user || user?.active !== false) {
       throw new NotFoundException({
@@ -140,7 +142,7 @@ export class AuthService {
 
     user.active = true;
 
-    await this.userService.update(user.id, user);
+    await this.userService.updateUser(user.id, user);
   }
 
   async validateSocialLogin(
@@ -166,7 +168,7 @@ export class AuthService {
       if (socialEmail && !userByEmail) {
         user.email = socialEmail;
       }
-      await this.userService.update(user.id, user);
+      await this.userService.updateUser(user.id, user);
     } else if (userByEmail) {
       user = userByEmail;
     } else if (socialData.id) {
@@ -183,7 +185,7 @@ export class AuthService {
 
       user = await this.userService.createWithHash(createData);
 
-      user = await this.userService.findById(user.id);
+      user = await this.userService.findById({ id: user.id });
     }
 
     if (!user) {

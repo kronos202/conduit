@@ -5,7 +5,6 @@ import { BaseService } from 'src/core/service/base.service';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma, User } from '@prisma/client';
 import { BcryptService } from 'src/core/service/bcrypt.service';
-import { MailService } from 'src/mail/mail.service';
 import { AuthProvidersEnum } from 'src/core/enums/auth-provider.enum';
 import { RoleEnum } from 'src/core/enums/roles.enum';
 import { NullableType } from 'src/utils/types/nullable';
@@ -21,7 +20,6 @@ export class UserService extends BaseService<
   constructor(
     protected databaseService: PrismaService,
     private bcryptService: BcryptService,
-    private mailService: MailService,
   ) {
     super(databaseService, 'User');
   }
@@ -72,29 +70,26 @@ export class UserService extends BaseService<
   }
 
   async findOneOrFail(id: number) {
-    return await this.findOrFailById(+id);
+    return await this.findOrFailById({ id });
   }
 
   async findOne(id: number) {
-    return await this.databaseService.user.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        followers: true,
-        following: true,
-      },
-    });
+    const include: Prisma.UserInclude = {
+      followers: true,
+      following: true,
+    };
+
+    return await this.findById({ id, include });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return await this.databaseService.user.update({
-      where: {
-        id,
-      },
-      data: {
-        ...updateUserDto,
-      },
+  async updateUser(id: number, updateUserDto: UpdateUserDto) {
+    const where: Prisma.UserWhereInput = {
+      id,
+    };
+
+    return await this.update({
+      data: { ...updateUserDto },
+      where,
     });
   }
 
@@ -105,20 +100,24 @@ export class UserService extends BaseService<
   }
 
   async softDeleteUser(userId: number) {
-    return await this.databaseService.user.update({
-      where: {
-        id: userId,
-      },
+    const where: Prisma.UserWhereInput = {
+      id: userId,
+    };
+
+    return await this.update({
+      where,
       data: {
         deletedAt: new Date(),
       },
     });
   }
+
   async restoreUser(userId: number) {
-    return await this.databaseService.user.update({
-      where: {
-        id: userId,
-      },
+    const where: Prisma.UserWhereInput = {
+      id: userId,
+    };
+    return await this.update({
+      where,
       data: {
         deletedAt: null,
       },

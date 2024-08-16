@@ -76,11 +76,26 @@ export default registerAs<AppConfig>('app', () => {
     fe_url: process.env.FRONTEND_URL || 'app',
     api_Prefix: process.env.API_PREFIX,
     app_port: process.env.APP_PORT ? parseInt(process.env.APP_PORT, 10) : 3000,
-    database_port: +process.env.DATABASE_PORT || 5432,
-    database_username: process.env.DATABASE_USERNAME,
-    database_password: process.env.DATABASE_PASSWORD,
-    database_name: process.env.DATABASE_NAME,
-    database_host: process.env.DATABASE_HOST,
+    database_port:
+      process.env.NODE_ENV === 'development'
+        ? +process.env.DEV_DATABASE_PORT
+        : +process.env.DATABASE_PORT,
+    database_username:
+      process.env.NODE_ENV === 'development'
+        ? process.env.DEV_DATABASE_USERNAME
+        : process.env.DATABASE_USERNAME,
+    database_password:
+      process.env.NODE_ENV === 'development'
+        ? process.env.DEV_DATABASE_PASSWORD
+        : process.env.DATABASE_PASSWORD,
+    database_name:
+      process.env.NODE_ENV === 'development'
+        ? process.env.DEV_DATABASE_NAME
+        : process.env.DATABASE_NAME,
+    database_host:
+      process.env.NODE_ENV === 'development'
+        ? process.env.DEV_DATABASE_HOST
+        : process.env.DATABASE_HOST,
     workingDirectory: process.env.PWD || process.cwd(),
   };
 });

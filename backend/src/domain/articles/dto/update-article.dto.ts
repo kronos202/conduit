@@ -33,4 +33,7 @@ export class UpdateArticleDto extends PartialType(CreateArticleDto) {
   @IsNotEmpty()
   @IsArray()
   tags?: string[];
+
+  @IsNotEmpty()
+  deletedAt?: string | null | Date;
 }

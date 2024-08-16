@@ -15,22 +15,75 @@ export class BaseService<
     protected modelName: Prisma.ModelName,
   ) {}
 
-  findMany() {
-    return this.databaseService[this.modelName].findMany();
-  }
+  findMany(params: {
+    where?: WhereInput;
+    select?: SelectInput;
+    orderBy?: OrderBy<SelectInput>;
+    include?: IncludeInput;
+  }) {
+    const { where, select, orderBy, include } = params;
 
-  create(data: CreateDto) {
-    return this.databaseService[this.modelName].create({ data });
-  }
-
-  async findById(id: number) {
-    return await this.databaseService[this.modelName].findUnique({
-      where: { id },
+    return this.databaseService[this.modelName].findMany({
+      where,
+      select,
+      orderBy,
+      include,
     });
   }
 
-  async findOrFailById(id: number) {
-    const result = await this.findById(id);
+  create(data: CreateDto, include?: IncludeInput) {
+    return this.databaseService[this.modelName].create({ data, include });
+  }
+
+  include?: IncludeInput;
+  async update(params: {
+    data: UpdateDto;
+    where?: WhereInput;
+    include?: IncludeInput;
+  }) {
+    const { data, where, include } = params;
+    return await this.databaseService[this.modelName].update({
+      data,
+      where,
+      include,
+    });
+  }
+
+  async findUnique(params: {
+    where?: WhereInput;
+    select?: SelectInput;
+    include?: IncludeInput;
+  }) {
+    const { where, include, select } = params;
+    return await this.databaseService[this.modelName].findUnique({
+      where,
+      include,
+      select,
+    });
+  }
+
+  async findById(params: {
+    id: number;
+    select?: SelectInput;
+    include?: IncludeInput;
+  }) {
+    const { id, include, select } = params;
+    return await this.databaseService[this.modelName].findUnique({
+      where: { id },
+      include,
+      select,
+    });
+  }
+
+  async findOrFailById(params: {
+    id: number;
+    where?: WhereInput;
+    select?: SelectInput;
+    include?: IncludeInput;
+  }) {
+    const { id, include, select } = params;
+
+    const result = await this.findById({ id, include, select });
     if (!result) {
       throw new NotFoundException(`${this.modelName} with ID ${id} not found`);
     }
@@ -38,15 +91,22 @@ export class BaseService<
   }
 
   async updateOrFailById(id: number, data: UpdateDto) {
-    await this.findOrFailById(id); // This will throw if not found
+    await this.findOrFailById({ id }); // This will throw if not found
     return this.databaseService[this.modelName].update({
       where: { id },
       data,
     });
   }
 
+  async delete(params: { where: WhereInput }) {
+    const { where } = params;
+    return this.databaseService[this.modelName].delete({
+      where,
+    });
+  }
+
   async deleteOrFailById(id: number) {
-    await this.findOrFailById(id); // This will throw if not found
+    await this.findOrFailById({ id }); // This will throw if not found
     return this.databaseService[this.modelName].delete({ where: { id } });
   }
 

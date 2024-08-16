@@ -16,7 +16,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsEmail()
   @MinLength(8)
   @IsString()
-  email: string;
+  email?: string;
 
   @MinLength(8)
   @IsString()
@@ -32,4 +32,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsOptional()
   avatar?: string;
+
+  @IsOptional()
+  deletedAt?: Date | null;
 }

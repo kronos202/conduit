@@ -3,12 +3,29 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+import { CreateArticleDto } from '../articles/dto/create-article.dto';
+import { UpdateArticleDto } from '../articles/dto/update-article.dto';
+import { BaseService } from 'src/core/service/base.service';
+import { ArticleService } from '../articles/article.service';
 
 @Injectable()
-export class CommentService {
-  constructor(private databaseService: PrismaService) {}
-  async create(content: string, authorId: number, slug: string) {
+export class CommentService extends BaseService<
+  CreateArticleDto,
+  UpdateArticleDto,
+  Prisma.CommentWhereInput,
+  Prisma.CommentSelect,
+  Prisma.CommentInclude
+> {
+  constructor(
+    databaseService: PrismaService,
+    private articleService: ArticleService,
+  ) {
+    super(databaseService, 'Article');
+  }
+
+  async createComment(content: string, authorId: number, slug: string) {
     const articleId = await this.findArticleIdBySlug(slug);
 
     return this.databaseService.comment.create({
@@ -28,24 +45,26 @@ export class CommentService {
   async getCommentsByArticleId(slug: string) {
     const articleId = await this.findArticleIdBySlug(slug);
 
-    return await this.databaseService.comment.findMany({
-      where: { articleId },
-      include: {
-        article: true,
-        author: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const where: Prisma.CommentWhereInput = {
+      articleId,
+    };
+
+    const include: Prisma.CommentInclude = {
+      article: true,
+      author: true,
+    };
+
+    return this.findMany({
+      where,
+      include,
+      orderBy: { updatedAt: 'desc' },
     });
   }
 
   async getCommentById(id: number) {
-    return await this.databaseService.comment.findUnique({
+    return this.findUnique({
       where: { id },
-      include: {
-        article: true,
-      },
+      include: { article: true },
     });
   }
 
@@ -57,7 +76,7 @@ export class CommentService {
   ) {
     const articleId = await this.findArticleIdBySlug(slug);
 
-    const comment = await this.databaseService.comment.findUnique({
+    const comment = await this.findUnique({
       where: { id: commentId, articleId },
     });
 
@@ -66,7 +85,8 @@ export class CommentService {
         'You are not authorized to update this comment.',
       );
     }
-    return await this.databaseService.comment.update({
+
+    return await this.update({
       where: { id: commentId, articleId },
       data: { content },
       include: {
@@ -78,8 +98,11 @@ export class CommentService {
   async deleteComment(id: number, userId: number, slug: string) {
     const articleId = await this.findArticleIdBySlug(slug);
 
-    const comment = await this.databaseService.comment.findUnique({
-      where: { id, articleId },
+    const comment = await this.findUnique({
+      where: {
+        id,
+        articleId,
+      },
     });
 
     if (!comment || comment.authorId !== userId) {
@@ -88,15 +111,13 @@ export class CommentService {
       );
     }
 
-    return await this.databaseService.comment.delete({
+    return await this.delete({
       where: { id, articleId },
     });
   }
 
   private async findArticleIdBySlug(slug: string) {
-    const article = await this.databaseService.article.findUnique({
-      where: { slug },
-    });
+    const article = await this.articleService.findBySlug(slug);
 
     if (!article) {
       throw new NotFoundException('Article not found');

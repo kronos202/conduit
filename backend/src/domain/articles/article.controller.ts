@@ -14,7 +14,6 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { Prisma } from '@prisma/client';
 import { Response } from 'express';
 import { Public } from 'src/core/decorators/public.decorator';
 import { SerializeInterceptor } from 'src/core/interceptors/serialize.interceptor';
@@ -22,6 +21,7 @@ import { ArticleExitPipe } from 'src/core/pipe/article/articleExist.pipe';
 import { getArrayTagFromString } from 'src/utils/transformers/stringToArray';
 import { CacheKey } from '@nestjs/cache-manager';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { CreateArticleDto } from './dto/create-article.dto';
 
 @Controller('article')
 @UseInterceptors(SerializeInterceptor)
@@ -29,10 +29,7 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Post('create')
-  create(
-    @Body() createArticleDto: Prisma.ArticleCreateInput & { tags: string[] },
-    @Request() req,
-  ) {
+  create(@Body() createArticleDto: CreateArticleDto, @Request() req) {
     return this.articleService.createArticle(createArticleDto, req.user.id);
   }
 
@@ -67,6 +64,7 @@ export class ArticleController {
   findMyArticles(@Request() req) {
     return this.articleService.findMyArticles(req.user.id);
   }
+
   @Get('user/:id')
   findArticlesById(@Param('id', ParseIntPipe) id: number) {
     return this.articleService.findArticlesByUserId(id);
@@ -84,13 +82,14 @@ export class ArticleController {
     @Body() data: UpdateArticleDto,
     @Request() req,
   ) {
-    return this.articleService.update(slug, data, req.user.id);
+    return this.articleService.updateArticle(slug, data, req.user.id);
   }
 
   @Patch('softDelete/:slug')
   async softDeleteArticle(@Param('slug') slug: string, @Request() req) {
     return this.articleService.softDeleteArticle(slug, req.user.id);
   }
+
   @Patch('restoreArticle/:slug')
   async restoreArticle(@Param('slug') slug: string, @Request() req) {
     return this.articleService.restoreArticle(slug, req.user.id);
@@ -109,6 +108,6 @@ export class ArticleController {
   @Get(':id')
   @Public()
   async findOne(@Param('id') id: string) {
-    return await this.articleService.findOrFailById(+id);
+    return await this.articleService.findOrFailById({ id: +id });
   }
 }

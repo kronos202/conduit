@@ -44,7 +44,7 @@ export class ArticleService extends BaseService<
     });
   }
 
-  async update(slug: string, data: UpdateArticleDto, userId: number) {
+  async updateArticle(slug: string, data: UpdateArticleDto, userId: number) {
     const { tags, content, description, title } = data; //as
     let slugUpdate: string;
     if (title) {
@@ -135,19 +135,23 @@ export class ArticleService extends BaseService<
   }
 
   async findOne(id: number) {
-    return await this.findOrFailById(id);
+    return await this.findOrFailById({ id });
   }
 
   async findBySlug(slug: string) {
-    return await this.databaseService.article.findUnique({
-      where: {
-        deletedAt: null,
-        slug,
-      },
-      include: {
-        author: true,
-        tags: true,
-      },
+    const where: Prisma.ArticleWhereInput = {
+      slug,
+      deletedAt: null,
+    };
+
+    const include: Prisma.ArticleInclude = {
+      author: true,
+      tags: true,
+    };
+
+    return await this.findUnique({
+      where,
+      include,
     });
   }
 
@@ -174,11 +178,13 @@ export class ArticleService extends BaseService<
   }
 
   async remove(slug: string, userId: number) {
-    return await this.databaseService.article.delete({
-      where: {
-        slug,
-        authorId: userId,
-      },
+    const where: Prisma.ArticleWhereInput = {
+      slug,
+      authorId: userId,
+    };
+
+    return await this.delete({
+      where,
     });
   }
 
@@ -211,9 +217,12 @@ export class ArticleService extends BaseService<
     count: number = 0,
   ): Promise<string> {
     const newSlug = count === 0 ? slug : `${slug}-${count}`;
-    const existingArticle = await this.databaseService.article.findUnique({
-      where: { slug: newSlug },
-    });
+
+    const where: Prisma.ArticleWhereInput = {
+      slug: newSlug,
+    };
+
+    const existingArticle = await this.findUnique({ where });
 
     if (existingArticle) {
       return this.generateUniqueSlug(slug, count + 1);
@@ -237,22 +246,27 @@ export class ArticleService extends BaseService<
   }
 
   async softDeleteArticle(slug: string, userId: number) {
-    return await this.databaseService.article.update({
-      where: {
-        authorId: userId,
-        slug,
-      },
+    const where: Prisma.ArticleWhereInput = {
+      authorId: userId,
+      slug,
+    };
+
+    return await this.update({
+      where,
       data: {
         deletedAt: new Date(),
       },
     });
   }
+
   async restoreArticle(slug: string, userId: number) {
-    return await this.databaseService.article.update({
-      where: {
-        authorId: userId,
-        slug,
-      },
+    const where: Prisma.ArticleWhereInput = {
+      authorId: userId,
+      slug,
+    };
+
+    return await this.update({
+      where,
       data: {
         deletedAt: null,
       },

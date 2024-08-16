@@ -27,7 +27,11 @@ export class CommentController {
     @Request() req,
     @Param('slug') slug: string,
   ) {
-    return await this.commentService.create(content.content, req.user.id, slug);
+    return await this.commentService.createComment(
+      content.content,
+      req.user.id,
+      slug,
+    );
   }
 
   @Get('byArticle/:slug')

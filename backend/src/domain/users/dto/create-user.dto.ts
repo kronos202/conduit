@@ -39,4 +39,7 @@ export class CreateUserDto {
 
   @IsOptional()
   hash?: string | null;
+
+  @IsOptional()
+  deletedAt?: Date | string | null;
 }

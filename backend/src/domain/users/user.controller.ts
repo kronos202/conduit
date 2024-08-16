@@ -20,10 +20,12 @@ export class UserController {
   findAll() {
     return this.userService.findAll();
   }
+
   @Patch('softDelete')
   softDeleteUser(@Req() req) {
     return this.userService.softDeleteUser(req.user.id);
   }
+
   @Patch('restore')
   restoreUsser(@Req() req) {
     return this.userService.restoreUser(req.user.id);
@@ -31,11 +33,11 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOneOrFail(+id);
   }
 
   @Patch('')
   update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(req.user.id, updateUserDto);
+    return this.userService.updateUser(req.user.id, updateUserDto);
   }
 }

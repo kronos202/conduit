@@ -31,4 +31,7 @@ export class CreateArticleDto {
   @IsNotEmpty()
   @IsArray()
   tags: string[];
+
+  @IsNotEmpty()
+  deletedAt: string | null | Date;
 }
