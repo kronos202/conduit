@@ -62,7 +62,7 @@ export class ArticleController {
   @Get('myArticles')
   @CacheKey('MY_ARTICLES')
   findMyArticles(@Request() req) {
-    return this.articleService.findMyArticles(req.user.id);
+    return this.articleService.findFollowingArticles(req.user.id);
   }
 
   @Get('user/:id')

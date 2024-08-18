@@ -68,7 +68,11 @@ const TagFeed = () => {
         )
       )}
       {articles?.length ? (
-        <Button disabled={!hasNextPage} onClick={() => fetchNextPage()}>
+        <Button
+          className={`${!isFetchingNextPage && "hidden"} `}
+          disabled={!hasNextPage}
+          onClick={() => fetchNextPage()}
+        >
           {isFetchingNextPage && <LoadingSpinner />}
         </Button>
       ) : (

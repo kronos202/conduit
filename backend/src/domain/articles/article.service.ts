@@ -5,6 +5,7 @@ import { BaseService } from 'src/core/service/base.service';
 import { Article, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import slugify from 'slugify';
+import { FollowerService } from '../followers/follower.service';
 
 @Injectable()
 export class ArticleService extends BaseService<
@@ -14,7 +15,10 @@ export class ArticleService extends BaseService<
   any,
   Prisma.ArticleInclude
 > {
-  constructor(databaseService: PrismaService) {
+  constructor(
+    databaseService: PrismaService,
+    private followerService: FollowerService,
+  ) {
     super(databaseService, 'Article');
   }
 
@@ -88,10 +92,32 @@ export class ArticleService extends BaseService<
 
     return await this.findWithPagination({ limit: 3, include, where });
   }
+
   async findMyArticles(userId: number) {
     const where: Prisma.ArticleWhereInput = {
       authorId: {
         equals: userId,
+      },
+      deletedAt: null,
+    };
+    const include: Prisma.ArticleInclude = {
+      author: true,
+      tags: true,
+    };
+
+    return await this.findWithPagination({ limit: 3, include, where });
+  }
+
+  async findFollowingArticles(userId: number) {
+    const followingUser = await this.followerService.getFollowing(userId);
+    console.log(followingUser);
+
+    const followedUserIds = followingUser.map((f) => f.followingId);
+    console.log(followedUserIds);
+
+    const where: Prisma.ArticleWhereInput = {
+      authorId: {
+        in: followedUserIds,
       },
       deletedAt: null,
     };

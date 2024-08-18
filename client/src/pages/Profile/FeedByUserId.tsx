@@ -67,7 +67,11 @@ const FeedByUserId = () => {
         )
       )}
       {articles?.length ? (
-        <Button disabled={!hasNextPage} onClick={() => fetchNextPage()}>
+        <Button
+          disabled={!hasNextPage}
+          className={`${!isFetchingNextPage && "hidden"} `}
+          onClick={() => fetchNextPage()}
+        >
           {isFetchingNextPage && <LoadingSpinner />}
         </Button>
       ) : (
