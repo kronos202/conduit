@@ -65,6 +65,12 @@ export class ArticleController {
     return this.articleService.findFollowingArticles(req.user.id);
   }
 
+  @Get('yourAticle')
+  @CacheKey('YOUR_ARTICLES')
+  findYourArticles(@Request() req) {
+    return this.articleService.findMyArticles(req.user.id);
+  }
+
   @Get('user/:id')
   findArticlesById(@Param('id', ParseIntPipe) id: number) {
     return this.articleService.findArticlesByUserId(id);
