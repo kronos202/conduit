@@ -65,7 +65,7 @@ const FavoriteFeed = () => {
       )}
       {articles?.length ? (
         <Button disabled={!hasNextPage} onClick={() => fetchNextPage()}>
-          {isFetchingNextPage ? <LoadingSpinner /> : " Load more..."}
+          {isFetchingNextPage && <LoadingSpinner />}
         </Button>
       ) : (
         "khong co bai post nao"
