@@ -1,8 +1,7 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CardDescription, CardHeader } from "@/components/ui/card";
-import { FilePenLine, Trash, Trash2 } from "lucide-react";
+import { Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useGetComments } from "@/hooks/comments/queries/useGetComments";
 import { useCreateComment } from "@/hooks/comments/mutations/useCreateComment";
