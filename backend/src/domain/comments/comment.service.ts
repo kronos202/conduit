@@ -22,7 +22,7 @@ export class CommentService extends BaseService<
     databaseService: PrismaService,
     private articleService: ArticleService,
   ) {
-    super(databaseService, 'Article');
+    super(databaseService, 'Comment');
   }
 
   async createComment(content: string, authorId: number, slug: string) {
@@ -44,6 +44,8 @@ export class CommentService extends BaseService<
 
   async getCommentsByArticleId(slug: string) {
     const articleId = await this.findArticleIdBySlug(slug);
+
+    console.log(articleId);
 
     const where: Prisma.CommentWhereInput = {
       articleId,

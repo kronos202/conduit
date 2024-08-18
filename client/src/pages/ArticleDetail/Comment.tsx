@@ -7,16 +7,14 @@ import { Separator } from "@/components/ui/separator";
 import { useGetComments } from "@/hooks/comments/queries/useGetComments";
 import { useCreateComment } from "@/hooks/comments/mutations/useCreateComment";
 import { useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { formattedDate } from "@/lib/utils";
 import { useDeleteComment } from "@/hooks/comments/mutations/useDeleteComment";
 import { EditComment } from "./EditComment";
-import { AppContext } from "@/context/app";
 import { Comments } from "@/types/comment.type";
 
 const Comment = () => {
   const params = useParams();
-  const { profile } = useContext(AppContext);
   const [comment, setComment] = useState("");
   const handleContent = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(event.target.value); // Cập nhật nội dung khi người dùng nhập vào
@@ -33,13 +31,10 @@ const Comment = () => {
       setComment("");
     }
   };
-  console.log(profile);
-
-  console.log(data);
 
   return (
     <div>
-      <div className="h-[170px] flex justify-center ">
+      {/* <div className="h-[170px] flex justify-center ">
         <div className="flex items-center gap-12">
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar>
@@ -72,7 +67,7 @@ const Comment = () => {
             </div>
           </CardHeader>
         </div>
-      </div>
+      </div> */}
       <Separator className="my-4" />
       <div className="flex justify-center w-full my-4">
         <div className="w-[50%]">

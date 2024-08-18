@@ -25,13 +25,6 @@ export class CreateArticleDto {
   content: string;
 
   @IsNotEmpty()
-  @IsString()
-  slug: string;
-
-  @IsNotEmpty()
   @IsArray()
   tags: string[];
-
-  @IsNotEmpty()
-  deletedAt: string | null | Date;
 }
