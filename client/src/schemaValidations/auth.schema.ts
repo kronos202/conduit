@@ -23,9 +23,13 @@ export const RegisterBody = LoginBody.extend({
 
 export type RegisterBodyType = z.TypeOf<typeof RegisterBody>;
 
-export const EditProfileBody = LoginBody.extend({
-  username: z.string().min(8).optional(),
-  bio: z.string().optional(),
-}).strict();
+export const EditProfileBody = z
+  .object({
+    email: z.string().email().min(8).optional(),
+    password: z.string().min(8).optional(),
+    username: z.string().min(8).optional(),
+    bio: z.string().optional(),
+  })
+  .strict();
 
 export type EditProfileBodyType = z.TypeOf<typeof EditProfileBody>;
