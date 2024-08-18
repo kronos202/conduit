@@ -9,12 +9,12 @@ import {
 export class CreateArticleDto {
   @IsNotEmpty()
   @IsString()
-  @MinLength(8)
-  @MaxLength(100)
+  @MinLength(2)
+  @MaxLength(50)
   title: string;
 
-  @MaxLength(20)
-  @MinLength(8)
+  @MaxLength(50)
+  @MinLength(2)
   @IsString()
   @IsNotEmpty()
   description: string;

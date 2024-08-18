@@ -4,7 +4,7 @@ export const CreateArticleBody = z
   .object({
     title: z.string().min(2).max(50),
     description: z.string().min(2).max(50),
-    content: z.string().min(2).max(50),
+    content: z.string().min(2),
     tags: z.array(z.string()),
   })
   .strict();
@@ -15,7 +15,7 @@ export const UpdateArticleBody = z
   .object({
     title: z.string().min(2).max(50).optional(),
     description: z.string().min(2).max(50).optional(),
-    content: z.string().min(2).max(50).optional(),
+    content: z.string().min(2).optional(),
     tags: z.array(z.string()).optional(),
   })
   .strict();

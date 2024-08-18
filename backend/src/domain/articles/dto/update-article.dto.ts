@@ -12,17 +12,16 @@ export class UpdateArticleDto extends PartialType(CreateArticleDto) {
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
-  @MaxLength(100)
+  @MaxLength(50)
   title?: string;
 
-  @MaxLength(20)
+  @MaxLength(50)
   @MinLength(8)
   @IsString()
   @IsNotEmpty()
   description?: string;
 
   @IsNotEmpty()
-  @MinLength(8)
   @IsString()
   content?: string;
 
