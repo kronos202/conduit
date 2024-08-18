@@ -112,7 +112,7 @@ export class ArticleService extends BaseService<
     const followingUser = await this.followerService.getFollowing(userId);
     console.log(followingUser);
 
-    const followedUserIds = followingUser.map((f) => f.followingId);
+    const followedUserIds = followingUser.map((f) => f.followerId);
     console.log(followedUserIds);
 
     const where: Prisma.ArticleWhereInput = {
@@ -121,6 +121,7 @@ export class ArticleService extends BaseService<
       },
       deletedAt: null,
     };
+
     const include: Prisma.ArticleInclude = {
       author: true,
       tags: true,
