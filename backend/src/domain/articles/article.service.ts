@@ -110,10 +110,8 @@ export class ArticleService extends BaseService<
 
   async findFollowingArticles(userId: number) {
     const followingUser = await this.followerService.getFollowing(userId);
-    console.log(followingUser);
 
     const followedUserIds = followingUser.map((f) => f.followerId);
-    console.log(followedUserIds);
 
     const where: Prisma.ArticleWhereInput = {
       authorId: {
