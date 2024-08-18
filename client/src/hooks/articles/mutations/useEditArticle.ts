@@ -10,6 +10,10 @@ export const useEditArticle = (slug: string) => {
     mutationFn: (body: UpdateArticleBodyType) => articleApi.update(slug, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.getAllArticles() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.getAllMyArticles() });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.getAllFavoriteArticles(),
+      });
       toast.success("Update article thanh cong");
     },
   });

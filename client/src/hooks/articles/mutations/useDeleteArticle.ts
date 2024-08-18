@@ -11,6 +11,10 @@ export const useDeleteArticle = () => {
     mutationFn: (slug: string) => articleApi.remove(slug),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.getAllArticles() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.getAllMyArticles() });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.getAllFavoriteArticles(),
+      });
       toast.success("Xoa article thanh cong");
       navigate("/");
     },
