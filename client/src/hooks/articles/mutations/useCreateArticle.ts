@@ -9,7 +9,7 @@ export const useCreateArticle = () => {
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  const { mutateAsync: create, isPending } = useMutation({
+  const { mutate: create, isPending } = useMutation({
     mutationFn: (data: CreateArticleBodyType) => articleApi.create(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.getAllArticles() });

@@ -10,8 +10,7 @@ const queryClientConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
       retry: 2,
-      refetchOnMount: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 20 * 1000,
     },
   },
 };
