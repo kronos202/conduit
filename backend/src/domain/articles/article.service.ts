@@ -82,8 +82,6 @@ export class ArticleService extends BaseService<
   }
 
   async findAll(page: number) {
-    console.log(page);
-
     const where: Prisma.ArticleWhereInput = {
       deletedAt: null,
     };

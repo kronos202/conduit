@@ -21,7 +21,6 @@ const ArticleDetail = () => {
   const { article, isLoading } = useArticleSlug(params.slug as string);
   const { deleteArticle } = useDeleteArticle();
 
-  console.log(article);
   const isMyArticle = article?.authorId === profile?.id;
 
   if (isLoading) {

@@ -38,8 +38,6 @@ export class AuthController {
   @Post('register')
   @Public()
   async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-    console.log(createUserDto);
-
     await this.authService.register(createUserDto);
     return res.status(HttpStatus.OK).json({
       message: 'Đăng kí thành công hãy kiểm tra email',
@@ -68,8 +66,6 @@ export class AuthController {
 
   @Post('logout')
   public async logout(@Request() request, @Res() res: Response) {
-    console.log(request.user.sessionId);
-
     await this.authService.logout({
       sessionId: request.user.sessionId,
     });

@@ -31,7 +31,6 @@ export function EditArticle() {
   const params = useParams();
   const { editArticle } = useEditArticle(params.slug as string);
   const { article } = useArticleSlug(params.slug as string);
-  console.log(article);
 
   const form = useForm<UpdateArticleBodyType>({
     resolver: zodResolver(UpdateArticleBody),

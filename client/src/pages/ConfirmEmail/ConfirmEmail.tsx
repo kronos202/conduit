@@ -6,7 +6,6 @@ const ConfirmEmail = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const hash = queryParams.get("hash");
-  console.log(hash);
 
   const { confirmEmail } = useConfirmEmail();
 

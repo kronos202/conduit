@@ -44,8 +44,6 @@ export class AuthService {
   ) {}
 
   async signIn(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
-    console.log(loginDto);
-
     const user = await this.userService.findOneOrFailByEmail(loginDto.email);
 
     const isValidPassword = await this.bcryptService.compare(

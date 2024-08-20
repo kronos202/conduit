@@ -126,8 +126,6 @@ async function main() {
 
   // await createSession(admin.id);
   // await createSession(regularUser.id);
-
-  console.log('Seed data has been added.');
 }
 
 main()

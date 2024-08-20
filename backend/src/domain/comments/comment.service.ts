@@ -45,8 +45,6 @@ export class CommentService extends BaseService<
   async getCommentsByArticleId(slug: string) {
     const articleId = await this.findArticleIdBySlug(slug);
 
-    console.log(articleId);
-
     const where: Prisma.CommentWhereInput = {
       articleId,
     };

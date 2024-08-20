@@ -45,8 +45,6 @@ export class ArticleController {
   @Public()
   @CacheKey('ALL_ARTICLES')
   findAll(@Query('page') page: string) {
-    console.log(page);
-
     return this.articleService.findAll(+page);
   }
 

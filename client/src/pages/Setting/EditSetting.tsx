@@ -32,8 +32,6 @@ const EditProfile = () => {
   const { edit } = useEditMe();
   const { profile } = useContext(AppContext);
 
-  console.log(profile);
-
   const form = useForm<EditProfileBodyType>({
     resolver: zodResolver(EditProfileBody),
     defaultValues: {

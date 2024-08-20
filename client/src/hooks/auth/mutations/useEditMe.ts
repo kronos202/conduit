@@ -17,8 +17,6 @@ export const useEditMe = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.me() });
       toast.success("Edit thành công");
-      console.log(data.data.data);
-
       setProfileToLS(data?.data.data as User);
       setProfile(data?.data.data as User);
     },
