@@ -35,17 +35,19 @@ export class ArticleController {
 
   @Get('byTag')
   @Public()
-  async findByTag(@Query('tagName') tag: string) {
+  async findByTag(@Query('tagName') tag: string, @Query('page') page: string) {
     const tags = getArrayTagFromString(tag);
 
-    return await this.articleService.findByTag(tags);
+    return await this.articleService.findByTag(tags, +page);
   }
 
   @Get('all')
   @Public()
   @CacheKey('ALL_ARTICLES')
-  findAll() {
-    return this.articleService.findAll();
+  findAll(@Query('page') page: string) {
+    console.log(page);
+
+    return this.articleService.findAll(+page);
   }
 
   @Post('toggleFavorite/:id')
@@ -55,25 +57,28 @@ export class ArticleController {
 
   @Get('favorite')
   @CacheKey('FAVORITE_ARTICLES')
-  findAllFavorite(@Request() req) {
-    return this.articleService.findAllFavorite(req.user.id);
+  findAllFavorite(@Request() req, @Query('page') page: string) {
+    return this.articleService.findAllFavorite(req.user.id, +page);
   }
 
   @Get('myArticles')
   @CacheKey('MY_ARTICLES')
-  findMyArticles(@Request() req) {
-    return this.articleService.findFollowingArticles(req.user.id);
+  findMyArticles(@Request() req, @Query('page') page: string) {
+    return this.articleService.findFollowingArticles(req.user.id, +page);
   }
 
   @Get('yourAticle')
   @CacheKey('YOUR_ARTICLES')
-  findYourArticles(@Request() req) {
-    return this.articleService.findMyArticles(req.user.id);
+  findYourArticles(@Request() req, @Query('page') page: string) {
+    return this.articleService.findMyArticles(req.user.id, +page);
   }
 
   @Get('user/:id')
-  findArticlesById(@Param('id', ParseIntPipe) id: number) {
-    return this.articleService.findArticlesByUserId(id);
+  findArticlesById(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('page') page: string,
+  ) {
+    return this.articleService.findArticlesByUserId(id, +page);
   }
 
   @Get(':slug')

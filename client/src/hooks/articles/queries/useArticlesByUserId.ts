@@ -6,7 +6,8 @@ export const useArticlesByUserId = (userId: number) => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: queryKeys.getAllArticlesByUserId(userId),
-      queryFn: () => articleApi.getArticlesByUserId(userId),
+      queryFn: ({ pageParam = 1 }) =>
+        articleApi.getArticlesByUserId(userId, pageParam),
       initialPageParam: 1,
       getNextPageParam: (lastPage, _, lastPageParam, allPageParams) => {
         return lastPage.data.data.totalPages === allPageParams.length

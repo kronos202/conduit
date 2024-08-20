@@ -81,7 +81,9 @@ export class ArticleService extends BaseService<
     });
   }
 
-  async findAll() {
+  async findAll(page: number) {
+    console.log(page);
+
     const where: Prisma.ArticleWhereInput = {
       deletedAt: null,
     };
@@ -90,10 +92,10 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where });
+    return await this.findWithPagination({ limit: 3, include, where, page });
   }
 
-  async findMyArticles(userId: number) {
+  async findMyArticles(userId: number, page: number) {
     const where: Prisma.ArticleWhereInput = {
       authorId: {
         equals: userId,
@@ -105,10 +107,10 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where });
+    return await this.findWithPagination({ limit: 3, include, where, page });
   }
 
-  async findFollowingArticles(userId: number) {
+  async findFollowingArticles(userId: number, page: number) {
     const followingUser = await this.followerService.getFollowing(userId);
 
     const followedUserIds = followingUser.map((f) => f.followerId);
@@ -125,10 +127,10 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where });
+    return await this.findWithPagination({ limit: 3, include, where, page });
   }
 
-  async findArticlesByUserId(userId: number) {
+  async findArticlesByUserId(userId: number, page: number) {
     const where: Prisma.ArticleWhereInput = {
       authorId: {
         equals: userId,
@@ -140,10 +142,10 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where });
+    return await this.findWithPagination({ limit: 3, include, where, page });
   }
 
-  async findAllFavorite(userId: number) {
+  async findAllFavorite(userId: number, page: number) {
     const whereInput: Prisma.ArticleWhereInput = {
       deletedAt: null,
       favoritedBy: { some: { id: userId } },
@@ -152,10 +154,12 @@ export class ArticleService extends BaseService<
       tags: true,
       author: true,
     };
+
     return await this.findWithPagination({
       where: whereInput,
       include: inCludeInput,
       limit: 3,
+      page,
     });
   }
 
@@ -180,7 +184,7 @@ export class ArticleService extends BaseService<
     });
   }
 
-  async findByTag(tagNames: string[]) {
+  async findByTag(tagNames: string[], page: number) {
     const where: Prisma.ArticleWhereInput = {
       tags: {
         some: {
@@ -199,6 +203,7 @@ export class ArticleService extends BaseService<
       where,
       include,
       limit: 3,
+      page,
     });
   }
 

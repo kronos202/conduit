@@ -6,7 +6,7 @@ export const useFavoriteArticles = () => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: queryKeys.getAllFavoriteArticles(),
-      queryFn: () => articleApi.getFavoriteArticles(),
+      queryFn: ({ pageParam = 1 }) => articleApi.getFavoriteArticles(pageParam),
       initialPageParam: 1,
       getNextPageParam: (lastPage, _, lastPageParam, allPageParams) => {
         return lastPage.data.data.totalPages === allPageParams.length

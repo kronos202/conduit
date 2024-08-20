@@ -27,23 +27,23 @@ const articleApi = {
     return http.patch(`${ARTICLE_UPDATE}/${slug}`, body);
   },
 
-  getAll() {
-    return http.get(ARTICLE_GETALL);
+  getAll(page: number) {
+    return http.get(ARTICLE_GETALL, { params: { page } });
   },
   getAllTags() {
     return http.get(ALL_TAG);
   },
-  getFavoriteArticles() {
-    return http.get(ARTICLE_FAVORITE);
+  getFavoriteArticles(page: number) {
+    return http.get(ARTICLE_FAVORITE, { params: { page } });
   },
-  getMyArticles() {
-    return http.get(ARTICLE_OWN);
+  getMyArticles(page: number) {
+    return http.get(ARTICLE_OWN, { params: { page } });
   },
-  getArticlesByUserId(id: number) {
-    return http.get(`${ARTICLE_USERID}/${id}`);
+  getArticlesByUserId(id: number, page: number) {
+    return http.get(`${ARTICLE_USERID}/${id}`, { params: { page } });
   },
-  getTagArticles(tagName: string) {
-    return http.get(ARTICLE_TAG, { params: { tagName } });
+  getTagArticles(tagName: string, page: number) {
+    return http.get(ARTICLE_TAG, { params: { tagName, page } });
   },
   getArticleSlug(slug: string) {
     return http.get(`${ARTICLE_SLUG}/${slug}`);
