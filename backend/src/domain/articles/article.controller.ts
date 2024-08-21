@@ -44,7 +44,7 @@ export class ArticleController {
   @Get('all')
   @Public()
   @CacheKey('ALL_ARTICLES')
-  findAll(@Query('page') page: string) {
+  findAll(@Query('page') page: string = '1') {
     return this.articleService.findAll(+page);
   }
 

@@ -1,19 +1,19 @@
 // prisma/seed.ts
 
 import { PrismaClient } from '@prisma/client';
-import { hash } from 'bcrypt';
-import * as crypto from 'crypto'; // Để tạo hash cho session
+// import { hash } from 'bcrypt';
+// import * as crypto from 'crypto'; // Để tạo hash cho session
 const prisma = new PrismaClient();
 
 async function main() {
   // Create roles
-  const adminRole = await prisma.role.upsert({
+  await prisma.role.upsert({
     where: { name: 'admin' },
     update: {},
     create: { name: 'admin' },
   });
 
-  const userRole = await prisma.role.upsert({
+  await prisma.role.upsert({
     where: { name: 'user' },
     update: {},
     create: { name: 'user' },

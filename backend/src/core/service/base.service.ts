@@ -118,9 +118,9 @@ export class BaseService<
     page?: number;
     limit?: number;
   }) {
-    const { where, select, orderBy, page, limit, include } = params;
+    const { where, select, orderBy, page, limit = 20, include } = params;
 
-    const skip = (page - 1) * limit ?? 0;
+    const skip = (page - 1) * limit;
     const take = limit;
 
     const totalItems = await this.databaseService[this.modelName].count({

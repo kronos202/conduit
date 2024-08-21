@@ -90,7 +90,7 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where, page });
+    return await this.findWithPagination({ include, where, page });
   }
 
   async findMyArticles(userId: number, page: number) {
@@ -105,7 +105,7 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where, page });
+    return await this.findWithPagination({ include, where, page });
   }
 
   async findFollowingArticles(userId: number, page: number) {
@@ -125,7 +125,7 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where, page });
+    return await this.findWithPagination({ include, where, page });
   }
 
   async findArticlesByUserId(userId: number, page: number) {
@@ -140,7 +140,7 @@ export class ArticleService extends BaseService<
       tags: true,
     };
 
-    return await this.findWithPagination({ limit: 3, include, where, page });
+    return await this.findWithPagination({ include, where, page });
   }
 
   async findAllFavorite(userId: number, page: number) {
@@ -156,7 +156,7 @@ export class ArticleService extends BaseService<
     return await this.findWithPagination({
       where: whereInput,
       include: inCludeInput,
-      limit: 3,
+
       page,
     });
   }
@@ -200,7 +200,7 @@ export class ArticleService extends BaseService<
     return this.findWithPagination({
       where,
       include,
-      limit: 3,
+
       page,
     });
   }
