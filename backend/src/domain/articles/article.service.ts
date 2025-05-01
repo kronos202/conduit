@@ -87,6 +87,7 @@ export class ArticleService extends BaseService<
     };
     const include: Prisma.ArticleInclude = {
       author: true,
+      favoritedBy: true,
       tags: true,
     };
 
@@ -102,6 +103,7 @@ export class ArticleService extends BaseService<
     };
     const include: Prisma.ArticleInclude = {
       author: true,
+      favoritedBy: true,
       tags: true,
     };
 
@@ -121,6 +123,7 @@ export class ArticleService extends BaseService<
     };
 
     const include: Prisma.ArticleInclude = {
+      favoritedBy: true,
       author: true,
       tags: true,
     };
@@ -136,6 +139,7 @@ export class ArticleService extends BaseService<
       deletedAt: null,
     };
     const include: Prisma.ArticleInclude = {
+      favoritedBy: true,
       author: true,
       tags: true,
     };
@@ -149,6 +153,7 @@ export class ArticleService extends BaseService<
       favoritedBy: { some: { id: userId } },
     };
     const inCludeInput: Prisma.ArticleInclude = {
+      favoritedBy: true,
       tags: true,
       author: true,
     };
@@ -194,6 +199,7 @@ export class ArticleService extends BaseService<
       deletedAt: null,
     };
     const include: Prisma.ArticleInclude = {
+      favoritedBy: true,
       tags: true,
       author: true,
     };

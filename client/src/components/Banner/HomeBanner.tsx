@@ -1,8 +1,15 @@
 export default function HomeBanner() {
   return (
-    <div className="container mt-4 bg-green-500 w-full h-[170px] flex flex-col items-center justify-center gap-3">
-      <h1 className="text-6xl font-bold text-white">conduit</h1>
-      <p className="text-2xl text-white">A place to share your knowledge.</p>
-    </div>
+    <section className="py-16 text-center text-white bg-gradient-to-r from-green-400 to-emerald-500">
+  <div className="max-w-3xl px-4 mx-auto">
+    <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl drop-shadow-sm">
+      Conduit
+    </h1>
+    <p className="mt-4 text-lg font-light md:text-xl">
+      A place to share your knowledge and connect with the world.
+    </p>
+  </div>
+</section>
+
   );
 }

@@ -8,9 +8,11 @@ type Props = {
 
 const AuthLayout = ({ children }: Props) => {
   return (
-    <div className="w-full min-h-[100vh] flex flex-col justify-between">
+    <div className="flex flex-col min-h-screen">
       <AuthHeader />
-      {children}
+      
+      <main className="flex-grow">{children}</main>
+      
       <Footer />
     </div>
   );

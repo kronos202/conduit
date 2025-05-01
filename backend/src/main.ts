@@ -21,7 +21,12 @@ async function bootstrap() {
     bodyParser: true,
   });
 
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  });
   const configService = app.get(ConfigService<AllConfigType>);
   const { app: appConfig } = getConfig(configService);
 

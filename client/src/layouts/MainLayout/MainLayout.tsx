@@ -10,9 +10,13 @@ interface Props {
 export default function MainLayout({ children }: Props) {
   const { isAuthenticated } = useContext(AppContext);
   return (
-    <div className="flex flex-col justify-between w-full min-h-screen ">
+    <div className="flex flex-col w-full min-h-screen">
       {isAuthenticated ? <Header /> : <AuthHeader />}
-      {children}
+
+      <main className="flex-grow">
+        {children}
+      </main>
+
       <Footer />
     </div>
   );

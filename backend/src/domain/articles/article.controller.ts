@@ -65,7 +65,7 @@ export class ArticleController {
   @Get('myArticles')
   @CacheKey('MY_ARTICLES')
   findMyArticles(@Request() req, @Query('page') page: string = '1') {
-    return this.articleService.findFollowingArticles(req.user.id, +page);
+    return this.articleService.findMyArticles(req.user.id, +page);
   }
 
   @Get('yourAticle')

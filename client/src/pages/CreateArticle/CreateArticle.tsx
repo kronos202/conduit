@@ -39,69 +39,99 @@ const CreateArticle = () => {
     return <LoadingSpinner />;
   }
   return (
-    <div className="mx-auto w-[500px] bg-gray-50 p-5 rounded-md">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="description" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="content" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="tags"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    placeholder="tags"
-                    {...field}
-                    onChange={(event) => {
-                      field.value = getArrayTagFromString(event.target.value);
-                      field.onChange(getArrayTagFromString(event.target.value));
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit">Create</Button>
-        </form>
-      </Form>
-    </div>
+    <div className="w-full max-w-md p-6 mx-auto mt-10 bg-white shadow-lg sm:p-8 rounded-xl">
+    <h2 className="mb-6 text-2xl font-bold text-center text-green-500">Create New Article</h2>
+  
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Title */}
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  placeholder="Enter article title"
+                  className="p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+  
+        {/* Description */}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  placeholder="Write a short description"
+                  className="p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+  
+        {/* Content */}
+        <FormField
+          control={form.control}
+          name="content"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <textarea
+                  rows={5}
+                  placeholder="Write your article (supports markdown)"
+                  className="w-full p-4 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-green-400"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+  
+        {/* Tags */}
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  placeholder="Enter tags separated by comma (e.g. tech, react)"
+                  className="p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400"
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    const array = getArrayTagFromString(value);
+                    field.onChange(array);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+  
+        {/* Submit */}
+        <Button
+          type="submit"
+          className="w-full py-2 font-medium text-white transition bg-green-500 rounded-md hover:bg-green-600"
+        >
+          Create Article
+        </Button>
+      </form>
+    </Form>
+  </div>
+  
   );
 };
 

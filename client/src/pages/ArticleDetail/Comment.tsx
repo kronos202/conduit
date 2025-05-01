@@ -32,93 +32,84 @@ const Comment = () => {
   };
 
   return (
-    <div>
-      {/* <div className="h-[170px] flex justify-center ">
-        <div className="flex items-center gap-12">
-          <CardHeader className="flex flex-row items-center gap-4">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col items-start">
-              <CardDescription className="text-base text-green-500">
-                Maksim Esteban
-              </CardDescription>
-              <CardDescription className="text-gray-400">
-                Maksim Esteban
-              </CardDescription>
+    <div className="w-full">
+      {/* Input comment */}
+      <div className="flex justify-center px-4">
+        <div className="w-full max-w-2xl space-y-2">
+          <Textarea
+            onChange={handleContent}
+            placeholder="Write a comment..."
+            className="w-full p-4 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-green-400"
+          />
+  
+          <div className="flex items-center justify-between px-4 py-2 bg-gray-100 rounded-md">
+            <div className="flex items-center gap-3">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
             </div>
-          </CardHeader>
-          <CardHeader className="flex flex-row items-center gap-4">
-            <div className="flex items-center gap-2 p-2 border rounded-sm">
-              <CardDescription className="text-base text-green-500">
-                <Trash2 />
-              </CardDescription>
-              <CardDescription className="text-gray-400">
-                Delete
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-2 p-2 border rounded-sm">
-              <CardDescription className="text-base text-green-500">
-                <FilePenLine />
-              </CardDescription>
-              <CardDescription className="text-gray-400">Edit</CardDescription>
-            </div>
-          </CardHeader>
-        </div>
-      </div> */}
-      <Separator className="my-4" />
-      <div className="flex justify-center w-full my-4">
-        <div className="w-[50%]">
-          <Textarea onChange={handleContent} className="rounded-b-none" />
-          <div className="container flex items-center justify-between h-12 bg-gray-200">
-            <Avatar className="">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Button onClick={handleCreate}>Post Comment</Button>
+            <Button
+              onClick={handleCreate}
+              className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+            >
+              Post Comment
+            </Button>
           </div>
         </div>
       </div>
-      <Separator className="my-4" />
+  
+      <Separator className="my-6" />
+  
+      {/* Comments list */}
       {data?.map((item: Comments) => (
-        <div className="flex justify-center w-full my-4">
-          <div className="w-[50%]">
-            <div className="w-full min-h-14 border-[4px] rounded-b-none flex items-center justify-center">
-              {item.content}
-            </div>
-            <div className="container flex items-center justify-between h-12 bg-gray-200">
-              <div className="flex items-center gap-3">
-                <Avatar>
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm"> {item.author.username}</p>
-                  <p className="text-sm">{formattedDate(item.createdAt)}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 cursor-pointer">
-                <div onClick={() => deleteComment(item.id)}>
-                  <Trash color="red" />
-                </div>
-                <div>
-                  <EditComment
-                    key={`${item.id}-${item.authorId}-${item.articleId}`}
-                    commentId={item.id}
-                    contentD={item.content}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+        <div key={item.id} className="flex justify-center px-4 mb-6">
+        <div className="flex items-center justify-between w-full max-w-3xl gap-4 px-4 py-3 mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
+  {/* Avatar + Author + Date */}
+  <div className="flex items-center flex-shrink-0 gap-3">
+    <Avatar className="w-10 h-10">
+      <AvatarImage src={item.author.avatar || undefined} />
+      <AvatarFallback>
+        {item.author.username.slice(0, 2).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+    <div className="flex flex-col text-sm">
+      <span className="font-semibold text-gray-800">{item.author.username}</span>
+      <span className="text-xs text-gray-400">{formattedDate(item.createdAt)}</span>
+    </div>
+  </div>
+
+  {/* Nội dung comment */}
+  <p className="flex-1 px-2 text-sm text-gray-700 truncate">{item.content}</p>
+
+  {/* Actions */}
+  <div className="flex items-center flex-shrink-0 gap-2">
+    <button
+      onClick={() => deleteComment(item.id)}
+      className="text-red-500 hover:text-red-600 p-1.5 rounded-full hover:bg-red-50 transition"
+      title="Delete"
+    >
+      <Trash className="w-4 h-4" />
+    </button>
+    <button
+      className="text-gray-600 hover:text-green-600 p-1.5 rounded-full hover:bg-green-50 transition"
+      title="Edit"
+    >
+      <EditComment
+        key={`${item.id}-${item.authorId}-${item.articleId}`}
+        commentId={item.id}
+        contentD={item.content}
+      />
+    </button>
+  </div>
+</div>
+
         </div>
       ))}
     </div>
   );
+  
+  
 };
 
 export default Comment;

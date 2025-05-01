@@ -54,53 +54,77 @@ export function EditArticle() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="outline" className="text-green-600 border-green-400 hover:bg-green-50">
+          Edit Profile
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+  
+      <DialogContent className="sm:max-w-[500px] rounded-xl shadow-lg px-6 py-4 bg-white">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+          <DialogTitle className="text-2xl font-bold text-green-600">Edit Profile</DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-gray-500">
+            Update your profile information and save your changes.
           </DialogDescription>
         </DialogHeader>
+  
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-5">
+            {/* Title */}
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="title" {...field} />
+                    <Input
+                      placeholder="Title"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+  
+            {/* Description */}
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="description" {...field} />
+                    <Input
+                      placeholder="Short description"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+  
+            {/* Content */}
             <FormField
               control={form.control}
               name="content"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="content" {...field} />
+                    <textarea
+                      placeholder="Tell something about yourself..."
+                      rows={4}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-green-400"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+  
+            {/* Tags */}
             <FormField
               control={form.control}
               name="tags"
@@ -108,26 +132,29 @@ export function EditArticle() {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="tags"
-                      {...field}
-                      onChange={(event) => {
-                        field.value = getArrayTagFromString(event.target.value);
-                        field.onChange(
-                          getArrayTagFromString(event.target.value)
-                        );
-                      }}
+                      placeholder="Tags (comma separated)"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400"
+                      onChange={(e) => field.onChange(getArrayTagFromString(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+  
             <DialogFooter>
-              <Button type="submit">Edit</Button>
+              <Button
+                type="submit"
+                className="w-full py-2 font-medium text-white transition bg-green-500 rounded-md hover:bg-green-600"
+              >
+                Save Changes
+              </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
   );
+  
+  
 }

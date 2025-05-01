@@ -2,40 +2,33 @@ import { Link, useLocation } from "react-router-dom";
 
 const AuthHeader = () => {
   const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <header className="py-4">
-      <div className="container">
+    <header className="bg-white shadow-sm">
+      <div className="px-6 py-4 mx-auto max-w-7xl">
         <nav className="flex items-center justify-between">
-          <Link to="/" className={`font-bold text-2xl text-green-500`}>
-            <h2>Conduit</h2>
+          <Link to="/" className="text-2xl font-bold tracking-tight text-green-500 transition hover:opacity-90">
+            Conduit
           </Link>
-          <div className="ml-5 text-xl lg:text-2xl">
-            <div className="flex items-center justify-between gap-4">
-              <Link
-                to="/"
-                className={`${
-                  location.pathname === "/" ? "text-gray-600" : ""
-                } font-bold text-base text-gray-400 hover:text-gray-600`}
-              >
-                <p>Home</p>
-              </Link>
-              <Link
-                to="/login"
-                className={`${
-                  location.pathname === "/login" ? "text-gray-600" : ""
-                } font-bold text-base text-gray-400 hover:text-gray-600`}
-              >
-                <p>Sign In</p>
-              </Link>
-              <Link
-                to="/register"
-                className={`${
-                  location.pathname === "/register" ? "text-gray-600" : ""
-                } font-bold text-base text-gray-400 hover:text-gray-600`}
-              >
-                <p>Sign Up</p>
-              </Link>
-            </div>
+
+          <div className="flex items-center gap-6 text-base font-medium">
+            <Link
+              to="/login"
+              className={`${
+                isActive("/login") ? "text-gray-900" : "text-gray-500"
+              } hover:text-green-500 transition duration-150 ease-in-out`}
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/register"
+              className={`${
+                isActive("/register") ? "text-gray-900" : "text-gray-500"
+              } hover:text-green-500 transition duration-150 ease-in-out`}
+            >
+              Sign Up
+            </Link>
           </div>
         </nav>
       </div>

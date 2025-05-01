@@ -1,131 +1,91 @@
-// prisma/seed.ts
-
 import { PrismaClient } from '@prisma/client';
-// import { hash } from 'bcrypt';
-// import * as crypto from 'crypto'; // Để tạo hash cho session
 const prisma = new PrismaClient();
 
 async function main() {
-  // Create roles
-  await prisma.role.upsert({
-    where: { name: 'admin' },
-    update: {},
-    create: { name: 'admin' },
+  // Roles
+  const adminRole = await prisma.role.create({
+    data: { name: 'admin' },
   });
 
-  await prisma.role.upsert({
-    where: { name: 'user' },
-    update: {},
-    create: { name: 'user' },
+  const userRole = await prisma.role.create({
+    data: { name: 'user' },
   });
 
-  // // Create users
-  // const admin = await prisma.user.create({
-  //   data: {
-  //     email: 'admin@example.com',
-  //     username: 'admin',
-  //     password: await hash('example', 10),
-  //     bio: 'Administrator',
-  //     role: { connect: { id: adminRole.id } },
-  //   },
-  // });
+  // Users
+  const user1 = await prisma.user.create({
+    data: {
+      email: 'user1@example.com',
+      username: 'user1',
+      password: 'hashedpassword1',
+      bio: 'Bio of user 1',
+      active: true,
+      role: { connect: { id: userRole.id } },
+    },
+  });
 
-  // const regularUser = await prisma.user.create({
-  //   data: {
-  //     email: 'user@example.com',
-  //     username: 'user',
-  //     password: await hash('example', 10),
-  //     bio: 'Regular user',
-  //     role: { connect: { id: userRole.id } },
-  //   },
-  // });
+  const user2 = await prisma.user.create({
+    data: {
+      email: 'user2@example.com',
+      username: 'user2',
+      password: 'hashedpassword2',
+      bio: 'Bio of user 2',
+      active: true,
+      role: { connect: { id: adminRole.id } },
+    },
+  });
 
-  // // Create an article
-  // const article = await prisma.article.create({
-  //   data: {
-  //     title: 'Sample Article',
-  //     description: 'This is a sample article',
-  //     content: 'Content of the sample article',
-  //     authorId: admin.id,
-  //     slug: 'sample-article',
-  //   },
-  // });
+  // Follower
+  await prisma.follower.create({
+    data: {
+      followerId: user1.id,
+      followingId: user2.id,
+    },
+  });
 
-  // // Create tags
-  // const tag1 = await prisma.tag.create({
-  //   data: { name: 'Tag1' },
-  // });
+  // Tags
+  const tagTech = await prisma.tag.create({
+    data: { name: 'tech' },
+  });
 
-  // const tag2 = await prisma.tag.create({
-  //   data: { name: 'Tag2' },
-  // });
+  const tagLife = await prisma.tag.create({
+    data: { name: 'lifestyle' },
+  });
 
-  // // Connect tags to the article
-  // await prisma.article.update({
-  //   where: { id: article.id },
-  //   data: {
-  //     tags: {
-  //       connect: [{ id: tag1.id }, { id: tag2.id }],
-  //     },
-  //   },
-  // });
+  // Articles
+  const article1 = await prisma.article.create({
+    data: {
+      title: 'First Article',
+      description: 'An intro article',
+      content: 'Hello world!',
+      slug: 'first-article',
+      authorId: user1.id,
+      tags: {
+        connect: [{ id: tagTech.id }],
+      },
+      favoritedBy: {
+        connect: [{ id: user2.id }],
+      },
+    },
+  });
 
-  // // Create comments
-  // const comment1 = await prisma.comment.create({
-  //   data: {
-  //     content: 'This is a comment on the sample article',
-  //     authorId: regularUser.id,
-  //     articleId: article.id,
-  //   },
-  // });
+  // Comment
+  await prisma.comment.create({
+    data: {
+      content: 'Nice article!',
+      articleId: article1.id,
+      authorId: user2.id,
+    },
+  });
 
-  // const comment2 = await prisma.comment.create({
-  //   data: {
-  //     content: 'Another comment on the sample article',
-  //     authorId: admin.id,
-  //     articleId: article.id,
-  //   },
-  // });
+  // Session
+  await prisma.session.create({
+    data: {
+      userId: user1.id,
+      hash: 'somehashvalue',
+    },
+  });
 
-  // // Create followers
-  // await prisma.follower.create({
-  //   data: {
-  //     followerId: regularUser.id,
-  //     followingId: admin.id,
-  //   },
-  // });
-
-  // await prisma.follower.create({
-  //   data: {
-  //     followerId: admin.id,
-  //     followingId: regularUser.id,
-  //   },
-  // });
-
-  // // Create favorites
-  // await prisma.article.update({
-  //   where: { id: article.id },
-  //   data: {
-  //     favoritedBy: {
-  //       connect: [{ id: regularUser.id }, { id: admin.id }],
-  //     },
-  //   },
-  // });
-
-  // // Create sessions
-  // const createSession = async (userId: number) => {
-  //   const hash = crypto.randomBytes(64).toString('hex'); // Generate a random hash for session
-
-  //   await prisma.session.create({
-  //     data: {
-  //       userId,
-  //       hash,
-  //     },
-  //   });
-  // };
-
-  // await createSession(admin.id);
-  // await createSession(regularUser.id);
+  console.log('🌱 Seed finished.');
 }
 
 main()

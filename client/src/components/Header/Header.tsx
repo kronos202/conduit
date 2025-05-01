@@ -5,45 +5,44 @@ import DropdownMenuAuth from "../DropDown";
 
 const Header = () => {
   const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <header className="py-4">
-      <div className="container">
+    <header className="py-4 bg-white shadow-sm">
+      <div className="container px-4 mx-auto max-w-7xl">
         <nav className="flex items-center justify-between">
-          <Link to="/" className={`font-bold text-2xl text-green-500`}>
-            <h2>Conduit</h2>
+          {/* Logo */}
+          <Link to="/" className="text-2xl font-extrabold text-green-500 transition hover:opacity-90">
+            Conduit
           </Link>
-          <div className="ml-5 text-xl lg:text-2xl">
-            <div className="flex items-center justify-between gap-4">
-              <Link
-                to="/"
-                className={`${
-                  location.pathname === "/" ? "text-gray-600" : ""
-                } font-bold text-base text-gray-400 hover:text-gray-600`}
-              >
-                <p>Home</p>
-              </Link>
-              <Link
-                to="/editor"
-                className={`${
-                  location.pathname === "/register" ? "text-gray-600" : ""
-                } font-bold text-base text-gray-400 hover:text-gray-600 flex items-center gap-1`}
-              >
-                <SquarePen />
-                <p>New Article</p>
-              </Link>
-              <Avatar>
-                <Link to="/setting">
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
-                    className="cursor-pointer"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Link>
-              </Avatar>
-              <DropdownMenuAuth />
-            </div>
+
+          <div className="items-center hidden gap-6 text-sm font-medium md:flex">
+  {/* Home */}
+
+  {/* New Article */}
+  <Link
+    to="/editor"
+    className={`flex items-center gap-1 hover:text-green-600 transition ${
+      isActive("/editor") ? "text-black" : "text-gray-500"
+    }`}
+  >
+    <SquarePen className="w-4 h-4" />
+    New Article
+  </Link>
           </div>
+
+<div className="flex items-center gap-4">
+{/* Avatar */}
+<Link to="/setting">
+    <Avatar className="w-8 h-8">
+      <AvatarImage src="https://github.com/shadcn.png" alt="User avatar" />
+      <AvatarFallback>CN</AvatarFallback>
+    </Avatar>
+  </Link>
+
+{/* Mobile Menu */}
+<DropdownMenuAuth />
+</div>
         </nav>
       </div>
     </header>

@@ -31,9 +31,9 @@ import type { ClientOpts } from 'redis';
       isGlobal: true,
       useClass: PrismaConfigService,
     }),
-    CacheModule.register<ClientOpts>({
-      url: `${process.env.REDISURL}`,
-    }),
+    // CacheModule.register<ClientOpts>({
+    //   url: `${process.env.REDISURL}`,
+    // }),
   ],
   providers: [
     {

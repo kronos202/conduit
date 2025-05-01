@@ -59,3 +59,16 @@ export function isAxiosConfligError<FormError>(
     isAxiosError(error) && error.response?.status === HttpStatusCode.Conflict
   );
 }
+
+interface InfiniteResponse<T> {
+  items: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  hasNextPage: boolean;
+}
+
+export interface InfiniteQueryResponse<T> {
+  pages: { data: { data: InfiniteResponse<T> } }[];
+  pageParams: number[];
+}

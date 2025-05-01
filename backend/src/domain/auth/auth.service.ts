@@ -177,7 +177,7 @@ export class AuthService {
           },
         },
         email: socialEmail ?? '',
-        username: socialData.firstName + socialData.lastName ?? '',
+        username: socialData.firstName + socialData.lastName,
         provider: authProvider,
       };
 

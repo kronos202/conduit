@@ -44,6 +44,7 @@ export class SessionService {
       where: { userId },
     });
   }
+
   async deleteByUserIdWithExclude(
     userId: User['id'],
     excludeSessionId: Session['id'],

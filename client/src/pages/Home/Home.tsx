@@ -7,11 +7,14 @@ const Home = () => {
     <div>
       <HomeBanner />
       <div className="container flex-1">
-        <div className="flex">
-          <div className="flex-[8]">
+        <div className="flex flex-col-reverse gap-6 md:flex-row">
+          {/* Feed */}
+          <div className="w-full md:w-2/3">
             <Feed />
           </div>
-          <div className="flex-[2]">
+
+          {/* TagList */}
+          <div className="flex justify-center w-full md:w-1/3 md:justify-start">
             <TagList />
           </div>
         </div>
@@ -19,5 +22,6 @@ const Home = () => {
     </div>
   );
 };
+
 
 export default Home;

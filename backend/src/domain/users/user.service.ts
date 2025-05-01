@@ -19,7 +19,7 @@ export class UserService extends BaseService<
 > {
   constructor(
     protected databaseService: PrismaService,
-    private bcryptService: BcryptService,
+    private readonly bcryptService: BcryptService,
   ) {
     super(databaseService, 'User');
   }

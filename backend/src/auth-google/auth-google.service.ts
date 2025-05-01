@@ -12,10 +12,10 @@ import { getConfig } from 'src/utils/helpers/getConfig';
 
 @Injectable()
 export class AuthGoogleService {
-  private google: OAuth2Client;
-  private config = getConfig(this.configService);
+  private readonly google: OAuth2Client;
+  private readonly config = getConfig(this.configService);
 
-  constructor(private configService: ConfigService<AllConfigType>) {
+  constructor(private readonly configService: ConfigService<AllConfigType>) {
     this.google = new OAuth2Client(
       this.config.google.clientId,
       this.config.google.clientSecret,

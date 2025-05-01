@@ -72,7 +72,10 @@ const MyFeed = () => {
           {isFetchingNextPage && <LoadingSpinner />}
         </Button>
       ) : (
-        "khong co bai post nao"
+        <div className="flex flex-col items-center mt-8 text-gray-500">
+    <p className="mt-4 text-lg">Không có bài viết nào.</p>
+    <p className="text-sm text-gray-400">Hãy đăng bài đầu tiên hoặc theo dõi người khác.</p>
+  </div>
       )}
     </TabsContent>
   );

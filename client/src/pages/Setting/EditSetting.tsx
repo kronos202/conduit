@@ -27,6 +27,7 @@ import {
 import { useEditMe } from "@/hooks/auth/mutations/useEditMe";
 import { useContext } from "react";
 import { AppContext } from "@/context/app";
+import { Textarea } from "@/components/ui/textarea";
 
 const EditProfile = () => {
   const { edit } = useEditMe();
@@ -36,86 +37,103 @@ const EditProfile = () => {
     resolver: zodResolver(EditProfileBody),
     defaultValues: {
       username: profile?.username,
-      bio: profile?.bio || "chưa có bio",
+      bio: profile?.bio || "",
       email: profile?.email,
       password: "*********",
     },
   });
 
-  function onSubmit(values: EditProfileBodyType) {
-    if (values.password === "*********") values.password = undefined;
-    if (values.bio === "chưa có bio") values.bio = undefined;
-    if (values.email === profile?.email) values.email = undefined;
-    if (values.username === profile?.username) values.username = undefined;
+  const onSubmit = (values: EditProfileBodyType) => {
+    const updated: Partial<EditProfileBodyType> = {};
+    if (values.username !== profile?.username) updated.username = values.username;
+    if (values.email !== profile?.email) updated.email = values.email;
+    if (values.password !== "*********") updated.password = values.password;
+    if (values.bio && values.bio !== profile?.bio) updated.bio = values.bio;
 
-    edit(values);
-  }
+    edit(updated);
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="destructive">Edit</Button>
+        <Button variant="destructive" className="font-semibold rounded-md">
+          Edit Profile
+        </Button>
       </SheetTrigger>
-      <SheetContent>
+
+      <SheetContent side="right" className="max-w-md">
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
+          <SheetTitle className="text-xl font-semibold text-green-600">Edit Profile</SheetTitle>
         </SheetHeader>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-6">
+            {/* Username */}
             <FormField
               control={form.control}
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className="text-sm font-medium text-gray-700">Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Your username" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Email */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>email</FormLabel>
+                  <FormLabel className="text-sm font-medium text-gray-700">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input type="email" placeholder="you@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Password */}
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>password</FormLabel>
+                  <FormLabel className="text-sm font-medium text-gray-700">Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="shadcn" {...field} />
+                    <Input type="password" placeholder="New password (optional)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Bio */}
             <FormField
               control={form.control}
               name="bio"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>bio</FormLabel>
+                  <FormLabel className="text-sm font-medium text-gray-700">Bio</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Textarea placeholder="Tell us something about you..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Footer */}
             <SheetFooter>
               <SheetClose asChild>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit" className="w-full text-white bg-green-500 hover:bg-green-600">
+                  Save Changes
+                </Button>
               </SheetClose>
             </SheetFooter>
           </form>
@@ -124,5 +142,6 @@ const EditProfile = () => {
     </Sheet>
   );
 };
+
 
 export default EditProfile;
